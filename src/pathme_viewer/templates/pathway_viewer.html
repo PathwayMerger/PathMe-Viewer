@@ -1,0 +1,771 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}PathMe{% endblock %}
+
+
+{% include "dependencies/graph_css.html" %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript">
+
+        var queriedPathways = {{pathways|safe }};
+        var pathwayIds = {{pathway_ids|safe }};
+
+        // Initializes popover
+        $(function () {
+            $('[data-toggle="popover"]').popover({
+                placement: 'top',
+                trigger: 'hover'
+            })
+        });
+
+    </script>
+    {% include "dependencies/common.html" %}
+    {% include "dependencies/graph_js.html" %}
+
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/inspire-tree/inspire-tree-bundled.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/d3-context-menu/d3-context-menu.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/pathway_controller.js') }}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container"><!-- /.container-fluid -->
+        <div class="col-md-12 graph-controller"><!-- /.graph-controls -->
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <!-- Paths - Export - Algorithms - Help-->
+                            <li class="controls"><a data-toggle="modal" data-target="#paths">Path Search</a>
+                            <li class="controls"><a data-toggle="modal" data-target="#algorithms">Algorithms</a>
+                            <li class="controls"><a data-toggle="modal" data-target="#export">Export</a>
+                            <li class="controls"><a data-toggle="modal" data-target="#info-graph">Info and Controls</a>
+
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div><!-- /.graph-controls -->
+
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="row">
+                <h2 class="title text-center"> {{ subgraph_name_string }}</h2>
+            </div>
+            <div class="row" style="margin-right: 0; margin-bottom:20px"><!-- visualization row -->
+                <div class="panel panel-default">  <!-- / Panel d3 Force -->
+                    <div class="panel-body" id="force-panel">
+                        <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div id="graph-chart"></div>
+                        </div>
+                        <div class="panel panel-default col-lg-4"
+                             style="max-height: 585px;height: 585px;padding-right: 0;padding-left: 0; margin-bottom:0">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs nav-center-tabs">
+                                <li class="active">
+                                    <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#tree-panel"><i
+                                            class="fa fa-filter" aria-hidden="true"></i> Annotations</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#nodes-panel"><i
+                                            class="fa fa-circle-o" aria-hidden="true"></i>
+                                        Nodes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#edges-panel"><i
+                                            class="fa fa-long-arrow-right" aria-hidden="true"></i> Edges</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#highlight-panel">
+                                        <i class="fa fa-lightbulb-o" aria-hidden="true"></i>
+                                        Highlight
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tree-panel" role="tabpanel">
+                                    <button type="button" id="refresh-network" data-toggle="popover"
+                                            title="Render the Network"
+                                            data-content="Renders the Network using the selected filtering. Note that the Network
+                                will not be rendered if it contains more than 1500 nodes to avoid crashing your browser."
+                                            class="btn btn-primary not-rounded width-50 pull-left">
+                                        Refresh Network
+                                    </button>
+                                    <button type="button" id="collapse-tree"
+                                            class="btn btn-primary not-rounded width-50 pull-right">
+                                        Collapse Annotations
+                                    </button>
+                                    <input placeholder="Annotation search" id="tree-search"
+                                           class="not-rounded form-control pull-left"
+                                           aria-describedby="sizing-addon1" type="text"/>
+                                    <input class="btn-block" data-toggle="toggle" data-width="100%"
+                                           data-style="android" data-on="All Annotations Should Be Present" value=""
+                                           title="And/Or Toggle" id="tree-toggle" data-off="Any Annotation Present"
+                                           type="checkbox">
+                                    <div id="tree" style="max-height:425px; overflow:auto;"></div>
+                                </div>
+                                <div class="tab-pane not-rounded" id="nodes-panel" role="tabpanel">
+                                    <button class='btn btn-primary not-rounded full-width' id='get-checked-nodes'>Show
+                                        Selected Nodes
+                                    </button>
+                                    <div class="input-group">
+                                <span class="input-group-addon not-rounded2" id="sizing-addon"><i
+                                        class="fa fa-connectdevelop fa-0.5x"></i></span>
+                                        <input placeholder="Search nodes" id="node-search"
+                                               class="wide form-control not-rounded"
+                                               aria-describedby="sizing-addon1" type="text"/>
+                                    </div>
+                                    <div class="not-rounded2" id="node-list"
+                                         style="max-height: 450px;height: 450px; overflow:auto;"></div>
+                                </div>
+                                <div class="tab-pane not-rounded" id="edges-panel" role="tabpanel">
+                                    <p class="text-center"><b> Modify Links Length</b></p>
+                                    <label for="link-slider"></label><input id="link-slider" style="width: 80%; margin-bottom: 5px; margin-top: 5px;
+                         margin-left: 10%; margin-right: 10%;"
+                                                                            class="text-center" type="range" min="0"
+                                                                            max="1"
+                                                                            step="any" value="0.7"/>
+                                    <div id="scaleFactorSettings">
+                                        <p class="text-center"><b> Scale of the groups: <span
+                                                id='scaleFactorLabel'>1.2</span></b></p>
+                                        <label for="convex-slider"></label>
+                                        <input id="convex-slider" type="range" min="1" max="3" value="1.2" step=".1"
+                                               style="width: 80%;
+                                        margin-bottom: 5px; margin-top: 5px; margin-left: 10%; margin-right: 10%;"
+                                               oninput="scaleFactor = value; d3.select('#scaleFactorLabel').text(scaleFactor); updateGroups()">
+                                    </div>
+                                    <button class='btn btn-primary not-rounded full-width' id='get-checked-edges'>Show
+                                        Selected Edges
+                                    </button>
+                                    <div class="input-group">
+                                <span class="input-group-addon not-rounded2" id="sizing-addon"><i
+                                        class="fa fa-connectdevelop fa-0.5x"></i></span>
+                                        <input placeholder="Search edges" id="edge-search"
+                                               class="wide form-control not-rounded"
+                                               aria-describedby="sizing-addon1" type="text"/>
+                                    </div>
+                                    <div id="edge-list" class="not-rounded2"
+                                         style="max-height: 280px;height: 280px; overflow:auto;"></div>
+                                </div>
+                                <div class="tab-pane not-rounded" id="highlight-panel" role="tabpanel">
+                                    <button class='btn btn-primary not-rounded full-width' id='remove-convex-hulls'>
+                                        Remove
+                                        Subgraph Highlighting
+                                    </button>
+                                    <button class='btn btn-primary not-rounded full-width' id='highlight-button'>
+                                        Highlight
+                                        Selection Below
+                                    </button>
+                                    <div class="input-group">
+                            <span class="input-group-addon not-rounded2" id="sizing-addon">
+                                <i class="fa fa-lightbulb-o" aria-hidden="true"></i></span>
+                                        <input placeholder="Search Highlight Function" id="highlight-search"
+                                               class="wide form-control not-rounded"
+                                               aria-describedby="sizing-addon1" type="text"/>
+                                    </div>
+                                    <div id="highlight-list" class="not-rounded2"
+                                         style="max-height: 450px;height: 450px; overflow:auto;">
+                                        <ul id="highlight-list-ul" class="list-group checked-list-box not-rounded">
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="Gene">Highlight Genes</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="RNA">Highlight RNAs</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="Protein">Highlight Proteins</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="Abundance">Highlight Abundances</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function"
+                                                      id="BiologicalProcess">Highlight Biological Processes</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="Pathology">Highlight Pathologies</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="Composite">Highlight Composites</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="Complex">Highlight Complexes</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="node-function" id="Reaction">Highlight Reactions</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="edge-relation"
+                                                      id="increases">Highlight Increase Relationships</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="edge-relation"
+                                                      id="decreases">Highlight Decrease Relationships</span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <label>
+                                                    <input class="highlight-checkbox" type="checkbox">
+                                                </label>
+                                                <span class="edge-relation"
+                                                      id="association">Highlight Association Relationships</span>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- panel-body -->
+                    </div><!-- panel -->
+                </div><!-- row -->
+                <div class="panel panel-default">
+                    <table id="info-table" class="table table-bordered table-hover"></table>
+                </div>
+                <!-- /.Force -->
+                <!-- / Sankey -->
+                <div class="panel panel-default text-center" id="sankey">
+                </div>
+                <!-- /.Sankey -->
+                <!-- / Gene_expression -->
+                <div class="panel panel-default text-center" id="gene_expression">
+                </div>
+                <!-- /.Gene_expression -->
+            </div>
+        </div>
+
+
+        <div id="info-graph" class="modal fade"><!-- /.info-graph Modal -->
+            <div class="modal-dialog modal-lg"><!-- /.Modal dialog -->
+                <div class="modal-content"><!-- /.Modal content -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Info And Controls</h4>
+                    </div>
+                    <div class="modal-body text-left"><!-- /.Modal body -->
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th><b>Function</b></th>
+                                <th><b>Action</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Modify Link (edges) Length</td>
+                                <td>Slider on Edge tab</td>
+                            </tr>
+                            <tr>
+                                <td>Open node contextual menu</td>
+                                <td>Right click on node</td>
+                            </tr>
+                            <tr>
+                                <td>Open edge contextual menu</td>
+                                <td>Right click on edge</td>
+                            </tr>
+                            <tr>
+                                <td>Freeze graph</td>
+                                <td>Press Space</td>
+                            </tr>
+                            <tr>
+                                <td>Pin a node down (fix it)</td>
+                                <td>Left click on the node and drag it</td>
+                            </tr>
+                            <tr>
+                                <td>Show information about node/edge</td>
+                                <td>Left click on the node/edge</td>
+                            </tr>
+                            <tr>
+                                <td>Release node (unfix it)</td>
+                                <td>Doubleclick on the node</td>
+                            </tr>
+                            <tr>
+                                <td>Highlight node and its neighbourhood</td>
+                                <td>Mouseover node</td>
+                            </tr>
+                            <tr>
+                                <td>Zooming</td>
+                                <td>Zooming buttons</td>
+                            </tr>
+                            <tr>
+                                <td>Panning</td>
+                                <td>Mouse click and drag</td>
+                            </tr>
+                            <tr>
+                                <td>Reset attributes (highlighting, color...)</td>
+                                <td>Double click in the graph</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <hr>
+                        <h4 class="text-center">
+                            Node Legend
+                        </h4>
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Functions</th>
+                                <th>Symbol</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="col-md-2">p()</td>
+                                <td class="col-md-1">
+                                    <div class="Protein"></div>
+                                </td>
+                                <td>Abundance of protein</td>
+                            </tr>
+
+                            <tr>
+                                <td>a()</td>
+                                <td>
+                                    <div class="Abundance"></div>
+                                </td>
+                                <td>Abundance of chemical (or other non-gene, RNA, protein abundances)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>r()</td>
+                                <td>
+                                    <div class="RNA"></div>
+                                </td>
+                                <td>Abundance of RNA</td>
+                            </tr>
+                            <tr>
+                                <td>m()</td>
+                                <td>
+                                    <div class="miRNA"></div>
+                                </td>
+                                <td>Abundance of microRNA</td>
+                            </tr>
+                            <tr>
+                                <td>g()</td>
+                                <td>
+                                    <div class="Gene"></div>
+                                </td>
+                                <td>Abundance of gene</td>
+                            </tr>
+                            <tr>
+                                <td>composite()</td>
+                                <td>
+                                    <div class="Composite"></div>
+                                </td>
+                                <td>Multiple entity abundances synergize to produce an effect but are
+                                    not
+                                    known to be bound into a complex
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>complex()</td>
+                                <td>
+                                    <div class="Complex"></div>
+                                </td>
+                                <td>Multiple entity abundances are bound into a complex</td>
+                            </tr>
+                            <tr>
+                                <td>path()</td>
+                                <td>
+                                    <div class="Pathology"></div>
+                                </td>
+                                <td>Disease or pathology process</td>
+                            </tr>
+                            <tr>
+                                <td>bp()</td>
+                                <td>
+                                    <div class="BiologicalProcess"></div>
+                                </td>
+                                <td>Biological process</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- .table -->
+                        <hr>
+                        <h4 class="text-center">
+                            Edge Legend
+                        </h4>
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Relationship</th>
+                                <th>Line Style</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>decreases, directlyDecreases</td>
+                                <td>
+                                    <span>&#9473;&#9515;</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>increases, directlyIncreases</td>
+                                <td>
+                                    <span>&#9473;&#9654;</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>negativeCorrelation</td>
+                                <td>
+                                    <hr class="legend-dashed-line" width="30%" style="border-color:red;"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>positiveCorrelation</td>
+                                <td>
+                                    <hr class="legend-dashed-line" width="30%" style="border-color:blue;"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>causesNoChange, association, orthologous</td>
+                                <td>
+                                    <hr class="legend-dashed-line" width="30%"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>transcribedTo, translatedTo</td>
+                                <td>
+                                    <hr class="legend-dashed-line" width="30%"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>biomarkerFor, prognosticBiomarkerFor</td>
+                                <td>
+                                    <hr class="legend-dashed-line" width="30%"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>hasMember, hasComponent, hasProduct, hasVariant, hasReactant,
+                                    hasProduct, isA
+                                </td>
+                                <td>
+                                    <hr class="legend-dashed-line" width="30%"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>rateLimitingStepOf, subProcessOf</td>
+                                <td>
+                                    <hr class="legend-dashed-line" width="30%"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- .table -->
+                        <hr>
+                        <h4 class="modal-title">Controls</h4>
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th><b>Button</b></th>
+                                <th><b>Action</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <button type="button" id="hide-node-names" class="btn btn-info">Hide text
+                                    </button>
+                                </td>
+                                <td>Hide node names</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" id="restore-node-names" class="btn btn-info">Restore
+                                        labels
+                                    </button>
+                                </td>
+                                <td>Restore node names</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" id="restore" class="btn btn-info">Restore all
+                                    </button>
+                                </td>
+                                <td>Restore node names and edge colors</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="button" id="remove-node-highlighting" class="btn btn-info">Remove
+                                        Text Highlighting
+                                    </button>
+                                </td>
+                                <td>Restore node text for new nodes</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /.Modal body -->
+                </div><!-- /.Modal content -->
+            </div><!-- /.Modal dialog -->
+        </div><!-- /.info-graph Modal -->
+
+        <div id="paths" class="modal fade"><!-- /paths Modal -->
+            <div class="modal-dialog"><!-- /.Modal dialog -->
+                <div class="modal-content"><!-- /.Modal content -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Path Mining</h4>
+                    </div>
+                    <div class="modal-body"><!-- /.Modal body -->
+                        <p>
+                            Highlight paths between two nodes in the currenly displayed graph using the chosen method.
+                            For
+                            presentation purposes, a button to identify paths between two random nodes in the graph is
+                            given.
+                        </p>
+                        <dl class="dl-horizontal">
+                            <dt>Shortest Path</dt>
+                            <dd>Calculate the shortest path between the selected nodes. If there are more than one
+                                shortest
+                                path, this algorithm randomly chooses one of them.
+                            </dd>
+                            <dt>All Paths</dt>
+                            <dd>Calculates all paths between the selected nodes with a maximum length of 7.
+                            </dd>
+                        </dl>
+                        <form id="path-form" class="form-horizontal" method="get">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="source-node">Source Node</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="source-node" name="source"
+                                           placeholder="Source node"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="target-node">Target Node</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="target-node" name="target"
+                                           placeholder="Target node"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="paths_method" value="shortest" checked>Shortest Path
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="paths_method" value="all">All Paths<br>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="visualization-options" value="hide">
+                                            Hide Other Nodes
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="undirectionalize" value="undirected" checked>
+                                            Remove Directionality
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="PATHOLOGY_FILTER" value="true">
+                                            Not Consider Pathology Nodes
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div><!-- /.Modal body -->
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" id="random-paths"
+                               value="Show a Random Path" data-dismiss="modal"/>
+
+                        <input type="button" class="btn btn-primary pull-right" id="button-paths" value="Submit"
+                               data-dismiss="modal"/>
+                    </div>
+                </div><!-- /.Modal content -->
+            </div><!-- /.Modal dialog -->
+        </div><!-- /.paths Modal -->
+
+        <div id="algorithms" class="modal fade"><!-- /Algorithms Modal -->
+            <div class="modal-dialog"><!-- /.Modal dialog -->
+                <div class="modal-content"><!-- /.Modal content -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Algorithms</h4>
+                    </div>
+                    <div class="modal-body"><!-- /.Modal body -->
+                        <p>Visualize top nodes according to betweenness centrality</p>
+                        <form id="betweenness-centrality" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Number of nodes" name="betweenness"
+                                       id="betweenness"/>
+                                <span class="input-group-btn">
+                                <input type="button" class="btn btn-primary" id="betweenness-button" value="Submit"
+                                       data-dismiss="modal"/>
+                            </span>
+                            </div>
+                        </form>
+                    </div><!-- /.Modal body -->
+                </div><!-- /.Modal content -->
+            </div><!-- /.Modal dialog -->
+        </div><!-- /.Algorithms Modal -->
+
+        <div id="export" class="modal fade"><!-- /.export-graph Modal -->
+            <div class="modal-dialog"><!-- /.Modal dialog -->
+                <div class="modal-content"><!-- /.Modal content -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Export</h4>
+                    </div>
+                    <div class="modal-body"><!-- /.Modal body -->
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Format</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Save current explorer window as a PNG image</td>
+                                <td>
+                                    <button type="button" id="save-svg-graph" class="btn btn-default"
+                                            aria-label="Left Align">
+                                        <i class="fa fa-file-image-o"></i></button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Save as a BEL script</td>
+                                <td>
+                                    <button type="button" id="bel-button" class="btn btn-default"
+                                            aria-label="Left Align">
+                                        <img alt="BEL-logo" id="bel-logo"
+                                             src="{{ url_for('static', filename='img/bel300x.png') }}"></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Save as <a href="http://graphml.graphdrawing.org/">GraphML</a> for use in Cytoscape
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-default explorer-download"
+                                            data-format="graphml">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Save as CSV for import in Microsoft Excel</td>
+                                <td>
+                                    <button type="button" class="btn btn-default explorer-download" data-format="csv">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Save as SIF</td>
+                                <td>
+                                    <button type="button" class="btn btn-default explorer-download" data-format="sif">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Save as <a href="http://www.home.ndexbio.org/data-model/">CX</a> JSON for use with
+                                    the
+                                    <a href="http://ndexbio.org/">Network Data Exchange</a></td>
+                                <td>
+                                    <button type="button" class="btn btn-default explorer-download" data-format="cx">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Save as Node-Link JSON for custom visualization using <a
+                                        href="https://d3js.org/">D3</a>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-default explorer-download" data-format="json">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Save as a <a
+                                        href="https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GRP:_Gene_set_file_format_.28.2A.grp.29">GRP</a>
+                                    file for Gene Set Enrichment Analysis (GSEA)
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-default explorer-download" data-format="gsea">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Save the citations as list of PubMed identifiers in a text file</td>
+                                <td>
+                                    <button type="button" class="btn btn-default explorer-download"
+                                            data-format="citations">
+                                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /.Modal body -->
+                </div><!-- /.Modal content -->
+            </div><!-- /.Modal content -->
+        </div><!-- /.Modal dialog -->
+    </div><!-- /.export-graph Modal -->
+{% endblock %}

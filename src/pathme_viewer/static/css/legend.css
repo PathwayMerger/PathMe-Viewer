@@ -1,0 +1,103 @@
+/* CSS file specific for the legend and node info circles*/
+
+.legend-dashed-line {
+    border-top: 2px dashed #888;
+    float: left;
+}
+
+span.after-hr {
+    font-size: large;
+}
+
+.legend-continuous-line {
+    border-top: 2px solid #888;
+    float: left;
+}
+
+.circle {
+    margin-left: 15px;
+    margin-right: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div.Pathology {
+    width: 20px;
+    height: 20px;
+    background: #FF7F0E;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.Protein {
+    width: 20px;
+    height: 20px;
+    background: #1F77B4;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.miRNA {
+    width: 20px;
+    height: 20px;
+    background: #D62728;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.RNA {
+    width: 20px;
+    height: 20px;
+    background: #FF9896;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.Complex {
+    width: 20px;
+    height: 20px;
+    background: #98DF8A;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.Composite {
+    width: 20px;
+    height: 20px;
+    background: #9467BD;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.Gene {
+    width: 20px;
+    height: 20px;
+    background: #FFBB78;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.BiologicalProcess {
+    width: 20px;
+    height: 20px;
+    background: #2CA02C;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
+div.Abundance {
+    width: 20px;
+    height: 20px;
+    background: #AEC7E8;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}

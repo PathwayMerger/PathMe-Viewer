@@ -1,0 +1,10 @@
+networkx
+pandas
+scipy
+tqdm
+numpy
+compath
+rdflib
+rdflib-jsonld
+requests
+bio2bel

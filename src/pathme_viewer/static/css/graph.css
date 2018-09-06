@@ -1,0 +1,223 @@
+#edge-list {
+    text-align: left;
+}
+
+#node-list {
+    text-align: left;
+}
+
+.candidate_mechanism {
+    padding-left: 15px;
+    min-width: 300px;
+}
+
+.candidate_nodes {
+    padding-left: 15px;
+    min-width: 500px;
+    padding-right: 15px;
+}
+
+.min-padding-left {
+    padding-left: 10px;
+}
+
+.normal {
+    font-weight: normal;
+}
+
+.button-padding {
+    margin: 10px;
+}
+
+.svg-border {
+    border: 1px solid black;
+}
+
+.not-rounded2 {
+    border-radius: 0 !important;
+}
+
+.center-table {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.left {
+    border-right: 1px solid #888;
+    float: left;
+    padding-right: 10px;
+    width: 50%
+}
+
+.right {
+    float: right;
+    padding-left: 10px;
+    width: 50%
+}
+
+.center {
+    text-align: center
+}
+
+.not-rounded {
+    border-radius: 0 !important;
+    width: 100%;
+}
+
+.not-rounded-50 {
+    border-radius: 0 !important;
+    width: 50%;
+}
+
+.node-checkbox {
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.edge-checkbox {
+    margin-right: 10px !important;
+    display: inline-block;
+}
+
+#export-node-list {
+    width: 300px;
+}
+
+#edge-search {
+    text-align: center;
+    min-width: 240px;
+}
+
+#node-search {
+    text-align: center;
+}
+
+.width-50 {
+    width: 50%;
+}
+
+#bel-logo {
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+}
+
+#json-logo {
+    height: 17px;
+    width: 17px;
+    vertical-align: middle;
+}
+
+#graph-chart {
+    display: block;
+    margin: auto;
+    height: 584px;
+}
+
+.graph-controller {
+    width: 100%;
+}
+
+.color_red {
+    color: darkred;
+}
+
+.color_black {
+    color: black;
+}
+
+.link_continuous {
+    fill: none;
+    stroke-width: 1px;
+    stroke: #888;
+}
+
+.link_dashed {
+    fill: none;
+    stroke-width: 1px;
+    stroke-dasharray: 4, 4;
+    stroke: #888;
+}
+
+.link_red {
+    stroke: red;
+}
+
+.link_blue {
+    stroke: blue;
+}
+
+.link_highlighted {
+    stroke: #4EB2D4;
+!important;
+}
+
+circle {
+    stroke-width: 2.5px;
+    stroke: black;
+}
+
+.node_highlighted > circle {
+    stroke: #4EB2D4 !important;
+}
+
+.node_highlighted > text {
+    fill: #4EB2D4 !important;
+}
+
+.new_node_highlight {
+    stroke: red;
+}
+
+.new_node_highlight > circle {
+    stroke: red;
+    fill: red;
+}
+
+/* Add text shadow to nodes*/
+.node text {
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff;
+}
+
+.Pathology {
+    fill: #FF7F0E;
+}
+
+.Abundance {
+    fill: #AEC7E8;
+}
+
+.Gene {
+    fill: #FFBB78;
+}
+
+.miRNA {
+    fill: #D62728;
+}
+
+.Protein {
+    fill: #1F77B4;
+}
+
+.RNA {
+    fill: #FF9896;
+}
+
+.BiologicalProcess {
+    fill: #2CA02C;
+}
+
+.Pathology {
+    fill: #FF7F0E;
+}
+
+.Complex {
+    fill: #98DF8A;
+}
+
+.Composite {
+    fill: #9467BD;
+}
+

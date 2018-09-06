@@ -1,0 +1,17 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo/pathme-logo-100px.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    {{ fixes.ie8() }}
+{% endblock %}
+
+{% block navbar %}
+    {{ super() }}
+    {% include "pathme_nav.html" %}
+{% endblock %}

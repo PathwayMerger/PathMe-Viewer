@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}About{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        var maxHeight = 0;
+        $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").each(function (idx, item) {
+            var height = $(item).height();
+            maxHeight = maxHeight > height ? maxHeight : height;
+        });
+        $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").height(maxHeight);
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">About</h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    PathMe is developed and maintained in an academic capacity by <a
+                        href="https://github.com/ddomingof">Daniel Domingo-Fernández</a> at the <a
+                        href="https://www.scai.fraunhofer.de/en/business-research-areas/bioinformatics.html">Fraunhofer
+                    SCAI Department of Bioinformatics</a>.
+                </p>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">References</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <h2>Resources</h2>
+                    <p>
+                        Resources from <a href="http://www.kegg.jp/">KEGG</a>,
+                        <a href="https://reactome.org/">Reactome</a>,
+                        <a href="https://www.wikipathways.org/">WikiPathways</a>, and
+                        <a href="http://software.broadinstitute.org/gsea/msigdb/">MSigDB</a>
+                        have been used to build this package and application.
+                    </p>
+                    <hr>
+                    <h3><b>KEGG</b></h3>
+
+                    <h4>License</h4>
+                    <p>KEGG KGML files are downloaded via the <a href="http://www.kegg.jp/kegg/rest/">KEGG API</a> for
+                        academic purposes (<a href="http://www.kegg.jp/kegg/legal.html">Terms and
+                            conditions</a>). More info at <a href="https://github.com/bio2bel/kegg">Bio2BEL KEGG</a>.
+                    </p>
+
+                    <h4>References</h4>
+                    <ul>
+                        <li>Kanehisa, Furumichi, M., Tanabe, M., Sato, Y., and Morishima, K.; KEGG: new
+                            perspectives
+                            on genomes, pathways, diseases and drugs. Nucleic Acids Res. 45, D353-D361
+                            (2017).
+                        </li>
+                        <li>Kanehisa, M., Sato, Y., Kawashima, M., Furumichi, M., and Tanabe, M.; KEGG as a
+                            reference resource for gene and protein annotation. Nucleic Acids Res. 44,
+                            D457-D462
+                            (2016).
+                        </li>
+                        <li> Kanehisa, M. and Goto, S.; KEGG: Kyoto Encyclopedia of Genes and Genomes.
+                            Nucleic Acids
+                            Res. 28, 27-30 (2000).
+                        </li>
+                    </ul>
+                    <hr>
+
+                    <h3><b>Reactome</b></h3>
+
+                    <h4>License</h4>
+                    <p>Reactome RDF files are downloaded via the <a href="https://reactome.org/download-data">Reactome
+                        API</a> for academic purposes (<a
+                            href="https://reactome.org/ContentService/about/license-agreement">Terms and
+                        conditions</a>).
+                    </p>
+                    <h4>References</h4>
+                    <ul>
+                        <li>Fabregat, Antonio et al. “The Reactome Pathway Knowledgebase.” Nucleic Acids
+                            Research 44.Database issue (2016): D481–D487. PMC. Web. 6 Oct. 2017.
+                        </li>
+                        <li>Croft, David et al. “The Reactome Pathway Knowledgebase.” Nucleic Acids Research
+                            42.Database issue (2014): D472–D477. PMC. Web. 6 Oct. 2017.
+                        </li>
+                    </ul>
+                    <hr>
+
+                    <h3><b>WikiPathways</b></h3>
+
+                    <h4>License</h4>
+                    <p>WikiPathways RDF files are downloaded via <a>WikiPathways</a> for academic purposes (<a
+                            href="https://www.wikipathways.org/index.php/WikiPathways:License_Terms">Terms and
+                        conditions</a>).
+                    </p>
+                    <h4>References</h4>
+
+                    <ul>
+                        <li>Slenter DN, Kutmon M, Hanspers K, Riutta A, Windsor J, Nunes N, Mélius J, Cirillo E,
+                            Coort SL, Digles D, Ehrhart F, Giesbertz P, Kalafati M, Martens M, Miller R, Nishida
+                            K,
+                            Rieswijk L, Waagmeester A, Eijssen LMT, Evelo CT, Pico AR, Willighagen EL.
+                            WikiPathways:
+                            a multifaceted pathway database bridging metabolomics to other omics research
+                            Nucleic
+                            Acids Research, (2017)doi.org/10.1093/nar/gkx1064
+                        </li>
+                        <li>Kutmon M, Riutta A, Nunes N, Hanspers K, Willighagen EL, Bohler A, Mélius J,
+                            Waagmeester
+                            A, Sinha SR, Miller R, Coort SL, Cirillo E, Smeets B, Evelo CT, Pico AR.
+                            WikiPathways:
+                            capturing the full diversity of pathway knowledge Nucl. Acids Res., 44, D488-D494
+                            (2016)
+                            doi:10.1093/nar/gkv1024
+                        </li>
+                        <li>Kelder T, van Iersel MP, Hanspers K, Kutmon M, Conklin BR, Evelo C, Pico AR.
+                            WikiPathways: building research communities on biological pathways. Nucleic Acids
+                            Res.
+                            2012 Jan;40(Database issue):D1301-7
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Application Metadata</h3>
+            </div>
+            <div class="list-group">
+                {% for key, value in metadata %}
+                    <div class="list-group-item">
+                        <h4 class="list-group-item-heading">{{ key }}</h4>
+                        <p class="list-group-item-text">{{ value }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
