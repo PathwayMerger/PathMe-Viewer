@@ -78,12 +78,12 @@ def manage(ctx, connection):
 @click.option('-y', '--yes', is_flag=True)
 @click.option('-c', '--connection', help='Cache connection. Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def drop(debug, yes, connection):
-    """Drop ComPath DB."""
+    """Drop PathMe DB."""
     set_debug_param(debug)
 
     if yes or click.confirm('Do you really want to delete the PathMe DB'):
         m = Manager.from_connection(connection=connection)
-        click.echo('Deleting ComPath DB')
+        click.echo('Deleting PathMe DB')
         m.drop_all()
         m.create_all()
 

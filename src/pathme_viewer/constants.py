@@ -5,13 +5,13 @@
 import os
 
 from bio2bel.utils import get_connection
-from compath_reloaded.cli import WIKIPATHWAYS_DIR
+from pathme.cli import WIKIPATHWAYS_DIR
 
 
 def get_data_dir(module_name):
     """Ensures the appropriate PathMe data directory exists for the given module, then returns the file path
 
-    :param str module_name: The name of the module. Ex: 'compath_reloaded'
+    :param str module_name: The name of the module. Ex: 'pathme'
     :return: The module's data directory
     :rtype: str
     """
