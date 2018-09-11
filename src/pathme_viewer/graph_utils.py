@@ -2,26 +2,20 @@
 
 """This module contains the methods used to deal with BELGraphs."""
 
-from pybel.struct.summary import get_annotation_values_by_annotation
+from operator import methodcaller
 
-# -*- coding: utf-8 -*-
-
-"""PyBEL tools exporting options """
-
+from flask import abort, Response, jsonify, send_file
+from flask import current_app
+from pybel_tools.mutation.metadata import serialize_authors
+from pybel_tools.summary import relation_set_has_contradictions
 from six import BytesIO, StringIO
 
 from pybel import to_bel_lines, to_graphml, to_bytes, to_csv
-from pybel_tools.mutation.metadata import serialize_authors
-from pybel.canonicalize import node_to_bel
-from pybel.utils import hash_node
-from pybel.constants import *
-
-from flask import current_app
 from pybel import union
+from pybel.constants import *
 from pybel.io import from_bytes
 from pybel.struct import add_annotation_value
-from pybel_tools.summary import relation_set_has_contradictions
-from flask import abort, Response, jsonify, send_file
+from pybel.struct.summary import get_annotation_values_by_annotation
 
 
 def process_request(request):
@@ -90,7 +84,7 @@ def merge_pathways(pathways):
 
 
 def to_json_custom(graph, _id='id', source='source', target='target'):
-    """Prepares JSON for the biological network explorer.
+    """Prepares JSON for the biological network explorer
 
     :type graph: pybel.BELGraph
     :param str _id: The key to use for the identifier of a node, which is calculated with an enumeration
@@ -103,10 +97,12 @@ def to_json_custom(graph, _id='id', source='source', target='target'):
     mapping = {}
 
     result['nodes'] = []
-    for i, node in enumerate(sorted(graph, key=hash_node)):
-        nd = graph.node[node].copy()
-        nd[_id] = hash_node(node)
-        nd['cname'] = nd['bel'] = node_to_bel(nd)
+    for i, node in enumerate(sorted(graph, key=methodcaller('as_bel'))):
+        nd = node.copy()
+        nd[_id] = node.sha512
+        nd['bel'] = node.as_bel()
+        if VARIANTS in nd or FUSION in nd or MEMBERS in nd:
+            nd['cname'] = nd['bel']
         result['nodes'].append(nd)
         mapping[node] = i
 
@@ -114,7 +110,7 @@ def to_json_custom(graph, _id='id', source='source', target='target'):
 
     rr = {}
 
-    for u, v, data in graph.edges_iter(data=True):
+    for u, v, data in graph.edges(data=True):
 
         if data[RELATION] in TWO_WAY_RELATIONS and (u, v) != tuple(sorted((u, v))):
             continue  # don't keep two way edges twice
