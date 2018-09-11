@@ -7,7 +7,7 @@ import os
 
 import tqdm
 from bio2bel_hgnc import Manager as HgncManager
-from pybel.io import to_bytes
+from pybel import to_bytes
 
 from pathme.cli import KEGG_DIR, REACTOME_DIR
 from pathme.constants import REACTOME, RDF_REACTOME, WIKIPATHWAYS
@@ -19,7 +19,7 @@ from pathme.wikipathways.utils import (
     get_file_name_from_url,
     get_wikipathways_files
 )
-from pathme.constants import HUMAN_WIKIPATHWAYS
+from .constants import HUMAN_WIKIPATHWAYS
 
 log = logging.getLogger(__name__)
 

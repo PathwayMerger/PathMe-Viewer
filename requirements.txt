@@ -8,3 +8,4 @@ rdflib
 rdflib-jsonld
 requests
 bio2bel
+pybel

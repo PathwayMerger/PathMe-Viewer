@@ -106,7 +106,7 @@ def to_json_custom(graph, _id='id', source='source', target='target'):
     for i, node in enumerate(sorted(graph, key=hash_node)):
         nd = graph.node[node].copy()
         nd[_id] = hash_node(node)
-        nd['cname'] =nd['bel'] = node_to_bel(nd)
+        nd['cname'] = nd['bel'] = node_to_bel(nd)
         result['nodes'].append(nd)
         mapping[node] = i
 
