@@ -26,9 +26,7 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: Bio-Informatics'
 ]
 INSTALL_REQUIRES = [
-    'networkx',
     'pandas',
-    'scipy',
     'tqdm',
     'numpy',
     'compath',

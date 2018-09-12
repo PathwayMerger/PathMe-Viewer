@@ -1,6 +1,4 @@
-networkx
 pandas
-scipy
 tqdm
 numpy
 compath
