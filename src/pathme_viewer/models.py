@@ -29,6 +29,9 @@ class Pathway(Base):
     resource_name = Column(String(255), nullable=False, index=True, doc='Database of origin')
     pathway_id = Column(String(255), nullable=False, index=True, doc='Pathway identifier in database of origin')
 
+    number_of_nodes = Column(Integer(), doc='Number of nodes')
+    number_of_edges = Column(Integer(), doc='Number of edges')
+
     version = Column(String(16), nullable=False, doc='Version of the BEL file')
     authors = Column(Text, nullable=True, doc='Authors of the underlying BEL file')
     contact = Column(String(255), nullable=True, doc='Contact email from the underlying pathway')
