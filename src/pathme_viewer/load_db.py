@@ -42,7 +42,7 @@ def import_folder(manager, folder, files, conversion_method, database, **kwargs)
             'resource_name': database,
             'name': bel_pathway.document['name'],
             'version': bel_pathway.document['version'],
-            'number_of_nodes': bel_pathway.number_of_nodes,
+            'number_of_nodes': bel_pathway.number_of_nodes(),
             'number_of_edges': bel_pathway.number_of_edges(),
             'authors': bel_pathway.document['authors'],
             'contact': bel_pathway.document['contact'],
