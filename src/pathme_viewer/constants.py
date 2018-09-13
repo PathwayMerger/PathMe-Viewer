@@ -16,13 +16,13 @@ def get_data_dir(module_name):
     :rtype: str
     """
     module_name = module_name.lower()
-    data_dir = os.path.join(COMPATH_DIR, module_name)
+    data_dir = os.path.join(PATHME_DIR, module_name)
     os.makedirs(data_dir, exist_ok=True)
     return data_dir
 
 
 MODULE_NAME = 'pathme_viewer'
-COMPATH_DIR = os.environ.get('COMPATH_DIRECTORY', os.path.join(os.path.expanduser('~'), '.compath'))
+PATHME_DIR = os.environ.get('PATHME_DIRECTORY', os.path.join(os.path.expanduser('~'), '.pathme'))
 DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)
 
 HUMAN_WIKIPATHWAYS = os.path.join(WIKIPATHWAYS_DIR, 'wp', 'Human')
