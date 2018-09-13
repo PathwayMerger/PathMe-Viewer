@@ -415,47 +415,18 @@ $(document).ready(function () {
         args["format"] = "bel";
 
         $.ajax({
-            url: "/api/graph/",
+            url: "/api/pathway/",
             dataType: "text",
             data: $.param(args, true)
         }).done(function (response) {
-            downloadText(response, "MyGraph.bel")
+            downloadText(response, "pathme_pathway.bel")
         });
     });
 
-    // Export to GraphML
-    $("#graphml-button").click(function () {
+    $(".explorer-download").click(function () {
         var args = getDefaultAjaxParameters(tree);
-        args["format"] = "graphml";
-        window.location.href = "/api/graph/" + $.param(args, true);
-    });
-
-    // Export to bytes
-    $("#bytes-button").click(function () {
-        var args = getDefaultAjaxParameters(tree);
-        args["format"] = "bytes";
-        window.location.href = "/api/graph/" + $.param(args, true);
-
-    });
-
-    // Export to CX
-    $("#cx-button").click(function () {
-        var args = getDefaultAjaxParameters(tree);
-        args["format"] = "cx";
-        window.location.href = "/api/graph/" + $.param(args, true);
-    });
-
-    // Export to CSV
-    $("#csv-button").click(function () {
-        var args = getDefaultAjaxParameters(tree);
-        args["format"] = "csv";
-        window.location.href = "/api/graph/" + $.param(args, true);
-    });
-
-    $("#nodelink-button").click(function () {
-        var args = getDefaultAjaxParameters(tree);
-        args["format"] = "json";
-        window.location.href = "/api/graph/" + $.param(args, true);
+        args["format"] = $(this).data('format');
+        window.location.href = "/api/pathway/?" + $.param(args, true);
     });
 
     // Reset expand/node window globals
@@ -463,7 +434,6 @@ $(document).ready(function () {
         window.expandNodes = [];
         window.deleteNodes = [];
     });
-
 
     // Update candidate mechanism dropdown
     $("#candidate-search").on("keyup", function () {
@@ -688,7 +658,7 @@ function initD3Force(graph, tree) {
 
                 // Ajax to update the cypher query. Three list are sent to the server. pks of the subgraphs, list of nodes to delete and list of nodes to expand
                 $.ajax({
-                    url: "/api/graph/",
+                    url: "/api/pathway/",
                     dataType: "json",
                     data: $.param(args, true)
                 }).done(function (response) {
@@ -715,7 +685,7 @@ function initD3Force(graph, tree) {
                 var args = getDefaultAjaxParameters(tree);
 
                 $.ajax({
-                    url: "/api/graph/",
+                    url: "/api/pathway/",
                     dataType: "json",
                     data: $.param(args, true)
                 }).done(function (response) {
@@ -1593,7 +1563,7 @@ function initD3Force(graph, tree) {
             }
 
             $.ajax({
-                url: "/api/graph/paths/",
+                url: "/api/pathway/paths/",
                 type: pathForm.attr("method"),
                 dataType: "json",
                 data: $.param(args, true),
@@ -1768,7 +1738,7 @@ function initD3Force(graph, tree) {
             args["node_number"] = betwennessForm.find("input[name='betweenness']").val();
 
             $.ajax({
-                url: "/api/graph/centrality/",
+                url: "/api/pathway/centrality/",
                 type: betwennessForm.attr("method"),
                 dataType: "json",
                 data: $.param(args, true),
