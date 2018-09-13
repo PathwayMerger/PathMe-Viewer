@@ -509,42 +509,6 @@ function clearUsedDivs() {
 }
 
 
-/**
- * Renders empty frame
- */
-function renderEmptyFrame() {
-    // Render empty rectangle
-
-    d = document;
-    e = d.documentElement;
-    g = d.getElementsByTagName("body")[0];
-
-    var graphDiv = $("#graph-chart");
-    var w = graphDiv.width(), h = graphDiv.height();
-
-    var svg = d3.select("#graph-chart").append("svg")
-        .attr("class", "svg-border")
-        .attr("id", "graph-svg")
-        .attr("width", w)
-        .attr("height", h);
-
-    // Background
-    svg.append("rect")
-        .attr("class", "background")
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr("fill", "#fcfbfb")
-        .style("pointer-events", "all");
-
-    // Text
-    svg.append("text")
-        .attr("class", "title")
-        .attr("x", w / 3.2)
-        .attr("y", h / 2)
-        .text("Please click in Refresh Network");
-}
-
-
 ///////////////////////////////////////
 /// Functions for updating the graph //
 ///////////////////////////////////////
@@ -763,31 +727,6 @@ function initD3Force(graph, tree) {
 
                     initD3Force(data["json"], tree);
 
-                });
-
-            }
-        },
-        {
-            title: 'Plot gene expression pattern',
-            action: function (elm, d) {
-
-                $.ajax({
-                    url: '/api/gene_expression/',
-                    dataType: "json",
-                    data: $.param({pks: pks, node: d.name}, true)
-                }).done(function (response) {
-
-                    // Display alert if not data in DB
-                    if (response.length == 0) {
-                        alert('NeuroMMSig does not contain datasets for the selected node. Please make sure that you have selected a node whose function is a protein/gene/rna.');
-                    }
-
-                    else {
-                        gene_expression = $('#gene_expression');
-                        gene_expression.empty();
-                        gene_expression.append("<h3>Expression pattern of " + d.value + "</h3>");
-                        columnChart(response)
-                    }
                 });
 
             }
@@ -1084,12 +1023,14 @@ function initD3Force(graph, tree) {
 
     var text = node.append("text")
         .attr("class", "node-name")
-        // .attr("id", nodehashes[d])
+        .attr("id", function (d) {
+            return d.id;
+        })
         .attr("fill", "black")
         .attr("dx", 16)
         .attr("dy", ".35em")
         .text(function (d) {
-            return d.cname
+            return getCanonicalName(d);
         });
 
     // Highlight on mouse-enter and back to normal on mouseout
@@ -1494,11 +1435,11 @@ function initD3Force(graph, tree) {
     // Create node list and create an array with duplicates
     $.each(graph.nodes, function (key, value) {
 
-        nodeNames.push(value.cname);
+        nodeNames.push(getCanonicalName(value));
 
         $("#node-list-ul").append("<li class='list-group-item'><input class='node-checkbox' type='checkbox'>" +
             "<div class='circle " + value.function + "'>" +
-            "</div><span class='node-" + value.id + "'>" + value.cname + "</span></li>");
+            "</div><span class='node-" + value.id + "'>" + getCanonicalName(value) + "</span></li>");
     });
 
     var duplicates = findDuplicates(nodeNames);

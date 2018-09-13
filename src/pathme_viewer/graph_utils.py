@@ -112,7 +112,7 @@ def to_json_custom(graph, _id='id', source='source', target='target'):
 
     for u, v, data in graph.edges(data=True):
 
-        if data[RELATION] in TWO_WAY_RELATIONS and (u, v) != tuple(sorted((u, v))):
+        if data[RELATION] in TWO_WAY_RELATIONS and (u, v) != tuple(sorted((u, v), key=methodcaller('as_bel'))):
             continue  # don't keep two way edges twice
 
         entry_code = u, v
@@ -262,7 +262,7 @@ def get_contradiction_summary(graph):
     :param pybel.BELGraph graph: A BEL graph
     :rtype: iter[tuple]
     """
-    for u, v in set(graph.edges_iter()):
+    for u, v in set(graph.edges()):
         relations = {data[RELATION] for data in graph[u][v].values()}
         if relation_set_has_contradictions(relations):
             yield u, v, relations

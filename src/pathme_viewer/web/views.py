@@ -76,13 +76,13 @@ def home():
 """Views"""
 
 
-@pathme.route('/pathme_viewer')
+@pathme.route('/pathme')
 def home():
     """PathMe home page."""
     return render_template('pathme.html')
 
 
-@pathme.route('/pathme_viewer/about')
+@pathme.route('/pathme/about')
 def about():
     """Render About page. Only when is run independent from ComPath"""
     metadata = [
@@ -97,7 +97,7 @@ def about():
     return render_template('meta/pathme_about.html', metadata=metadata)
 
 
-@pathme.route('/pathme_viewer/viewer')
+@pathme.route('/pathme/viewer')
 def viewer():
     """PathMe page."""
     pathways = process_request(request)

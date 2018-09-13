@@ -75,6 +75,15 @@ div.Composite {
     border-radius: 60px;
 }
 
+div.Reaction {
+    width: 20px;
+    height: 20px;
+    background: #000000;
+    -moz-border-radius: 60px;
+    -webkit-border-radius: 60px;
+    border-radius: 60px;
+}
+
 div.Gene {
     width: 20px;
     height: 20px;
