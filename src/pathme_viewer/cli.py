@@ -8,13 +8,13 @@ import logging
 import os
 
 import click
+
 from pathme.constants import DATA_DIR, KEGG, RDF_WIKIPATHWAYS, REACTOME, WIKIPATHWAYS
 from pathme.utils import make_downloader
 from pathme.wikipathways.utils import (
     get_file_name_from_url,
     unzip_file
 )
-
 from .constants import DEFAULT_CACHE_CONNECTION
 from .load_db import load_wikipathways, load_reactome
 from .manager import Manager
@@ -54,11 +54,12 @@ def main():
 @main.command()
 @click.option('--host', default='0.0.0.0', help='Flask host. Defaults to 0.0.0.0')
 @click.option('--port', type=int, default=5000, help='Flask port. Defaults to 5000')
-def web(host, port):
+@click.option('--template', help='Defaults to "../templates"')
+@click.option('--static', help='Defaults to "../static"')
+def web(host, port, template, static):
     """Run web service."""
-
     from .web.web import create_app
-    app = create_app()
+    app = create_app(template_folder=template, static_folder=static)
     app.run(host=host, port=port)
 
 
