@@ -6,19 +6,19 @@ import logging
 import os
 
 import tqdm
-from bio2bel_hgnc import Manager as HgncManager
-from pybel import to_bytes
 
 from pathme.cli import KEGG_DIR, REACTOME_DIR
-from pathme.constants import REACTOME, RDF_REACTOME, WIKIPATHWAYS
+from pathme.constants import KEGG, REACTOME, RDF_REACTOME, WIKIPATHWAYS
+from pathme.kegg.convert_to_bel import kegg_to_bel
 from pathme.reactome.rdf_sparql import reactome_to_bel
 from pathme.reactome.utils import untar_file
-from pathme.utils import make_downloader
+from pathme.utils import make_downloader, get_files_in_folder
 from pathme.wikipathways.rdf_sparql import wikipathways_to_bel
 from pathme.wikipathways.utils import (
     get_file_name_from_url,
     get_wikipathways_files
 )
+from pybel import to_bytes
 from .constants import HUMAN_WIKIPATHWAYS
 
 log = logging.getLogger(__name__)
@@ -54,6 +54,53 @@ def import_folder(manager, folder, files, conversion_method, database, **kwargs)
     log.info('%s has been loaded', database)
 
 
+def load_kegg(manager, hgnc_manager, chebi_manager, folder=None):
+    """Load KEGG files in PathMe DB.
+
+    :param pathme_viewer.manager.Manager manager: PathMe manager
+    :param bio2bel_hgnc.Manager hgnc_manager: HGNC manager
+    :param bio2bel_chebi.Manager chebi_manager: ChEBI manager
+    :param str folder: folder
+    """
+    kegg_data_folder = folder or KEGG_DIR
+
+    kgml_files = get_files_in_folder(kegg_data_folder)
+
+    if not kgml_files:
+        log.warning("There are no KGML files in %s. Please run 'python3 -m pathme kegg download'", kegg_data_folder)
+
+    import_folder(
+        manager,
+        kegg_data_folder,
+        kgml_files,
+        kegg_to_bel,
+        KEGG,
+        hgnc_manager=hgnc_manager,
+        chebi_manager=chebi_manager
+    )
+
+
+def load_reactome(manager, hgnc_manager, folder=None):
+    """Load Reactome files in PathMe DB.
+
+    :param pathme_viewer.manager.Manager manager: PathMe manager
+    :param Optional[str] folder: folder
+    """
+    reactome_data_folder = folder or REACTOME_DIR
+
+    cached_file = os.path.join(reactome_data_folder, get_file_name_from_url(RDF_REACTOME))
+    make_downloader(RDF_REACTOME, cached_file, REACTOME, untar_file)
+
+    import_folder(
+        manager,
+        reactome_data_folder,
+        ['Homo_sapiens.owl'],
+        reactome_to_bel,
+        REACTOME,
+        hgnc_manager=hgnc_manager
+    )
+
+
 def load_wikipathways(manager, folder=None, connection=None, only_canonical=True):
     """Load WikiPathways files in PathMe DB.
 
@@ -70,31 +117,4 @@ def load_wikipathways(manager, folder=None, connection=None, only_canonical=True
         only_canonical
     )
 
-    import_folder(manager, wikipathways_data_folder, files, wikipathways_to_bel, database=WIKIPATHWAYS)
-
-
-def load_reactome(manager, folder=None):
-    """Load Reactome files in PathMe DB.
-
-    :param pathme_viewer.manager.Manager manager: PathMe manager
-    :param Optional[str] folder: folder
-    """
-    reactome_data_folder = folder or REACTOME_DIR
-
-    cached_file = os.path.join(reactome_data_folder, get_file_name_from_url(RDF_REACTOME))
-    make_downloader(RDF_REACTOME, cached_file, REACTOME, untar_file)
-
-    log.info('Initiating HGNC Manager')
-    hgnc_manager = HgncManager()
-
-    import_folder(manager, reactome_data_folder, ['Homo_sapiens.owl'], reactome_to_bel, database=REACTOME,
-                  hgnc_manager=hgnc_manager)
-
-
-def load_kegg(manager, folder=KEGG_DIR):
-    """Load KEGG files in PathMe DB.
-
-    :param pathme_viewer.manager.Manager manager: PathMe manager
-    :param str folder: folder
-    """
-    NotImplemented
+    import_folder(manager, wikipathways_data_folder, files, wikipathways_to_bel, WIKIPATHWAYS)

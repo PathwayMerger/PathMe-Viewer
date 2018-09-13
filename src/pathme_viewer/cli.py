@@ -8,6 +8,8 @@ import logging
 import os
 
 import click
+from bio2bel_chebi import Manager as ChebiManager
+from bio2bel_hgnc import Manager as HgncManager
 
 from pathme.constants import DATA_DIR, KEGG, RDF_WIKIPATHWAYS, REACTOME, WIKIPATHWAYS
 from pathme.utils import make_downloader
@@ -16,7 +18,7 @@ from pathme.wikipathways.utils import (
     unzip_file
 )
 from .constants import DEFAULT_CACHE_CONNECTION
-from .load_db import load_wikipathways, load_reactome
+from .load_db import load_kegg, load_reactome, load_wikipathways
 from .manager import Manager
 from .models import Base
 
@@ -96,20 +98,27 @@ def drop(debug, yes, connection):
 @click.option('-wp', '--wikipathways_path', help='WikiPathways data folder. Defaults to {}'.format(WIKIPATHWAYS_DIR))
 def load_database(connection, kegg_path, reactome_path, wikipathways_path):
     """Loads pathways into Database"""
+    manager = Manager.from_connection(connection=connection)
+
+    log.info('Initiating HGNC Manager')
+    hgnc_manager = HgncManager()
+
+    log.info('Initiating ChEBI Manager')
+    chebi_manager = ChebiManager()
 
     """Load KEGG"""
+
+    load_kegg(manager, hgnc_manager, chebi_manager, kegg_path)
 
     """Load WikiPathways"""
     cached_file = os.path.join(WIKIPATHWAYS_DIR, get_file_name_from_url(RDF_WIKIPATHWAYS))
     make_downloader(RDF_WIKIPATHWAYS, cached_file, WIKIPATHWAYS, unzip_file)
 
-    manager = Manager.from_connection(connection=connection)
-
     load_wikipathways(manager, wikipathways_path)
 
     """Load Reactome"""
 
-    load_reactome(manager, reactome_path)
+    load_reactome(manager, hgnc_manager, reactome_path)
 
 
 @manage.command(help='Summarizes Entries in Database')
