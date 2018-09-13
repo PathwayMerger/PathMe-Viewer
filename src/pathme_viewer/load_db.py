@@ -54,7 +54,7 @@ def import_folder(manager, folder, files, conversion_method, database, **kwargs)
     log.info('%s has been loaded', database)
 
 
-def load_kegg(manager, hgnc_manager, chebi_manager, folder=None):
+def load_kegg(manager, hgnc_manager, chebi_manager, folder=None, flatten=None):
     """Load KEGG files in PathMe DB.
 
     :param pathme_viewer.manager.Manager manager: PathMe manager
@@ -76,7 +76,8 @@ def load_kegg(manager, hgnc_manager, chebi_manager, folder=None):
         kegg_to_bel,
         KEGG,
         hgnc_manager=hgnc_manager,
-        chebi_manager=chebi_manager
+        chebi_manager=chebi_manager,
+        flatten=True if flatten is True else False
     )
 
 

@@ -96,8 +96,9 @@ def drop(debug, yes, connection):
 @click.option('-kp', '--kegg_path', help='KEGG data folder. Defaults to {}'.format(KEGG_DIR))
 @click.option('-rp', '--reactome_path', help='Reactome data folder. Defaults to {}'.format(REACTOME_DIR))
 @click.option('-wp', '--wikipathways_path', help='WikiPathways data folder. Defaults to {}'.format(WIKIPATHWAYS_DIR))
-def load_database(connection, kegg_path, reactome_path, wikipathways_path):
-    """Loads pathways into Database"""
+@click.option('-f', '--flatten', help='Flat complexes/composites. Defaults to False')
+def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatten):
+    """Loads databases into PathMe DB"""
     manager = Manager.from_connection(connection=connection)
 
     log.info('Initiating HGNC Manager')
@@ -108,9 +109,10 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path):
 
     """Load KEGG"""
 
-    load_kegg(manager, hgnc_manager, chebi_manager, kegg_path)
+    load_kegg(manager, hgnc_manager, chebi_manager, kegg_path, flatten)
 
     """Load WikiPathways"""
+
     cached_file = os.path.join(WIKIPATHWAYS_DIR, get_file_name_from_url(RDF_WIKIPATHWAYS))
     make_downloader(RDF_WIKIPATHWAYS, cached_file, WIKIPATHWAYS, unzip_file)
 
