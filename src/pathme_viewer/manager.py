@@ -113,6 +113,30 @@ class Manager(object):
         self.session.query(Pathway).delete()
         self.session.commit()
 
+    def delete_pathways_from_resource(self, resource_name):
+        """Delete pathways from a given database.
+
+        :param str resource_name: name of the database
+        :rtype: bool
+        """
+        pathways_in_resource = self.session.query(Pathway).filter(Pathway.resource_name == resource_name)
+
+        if not pathways_in_resource:
+            return False
+
+        pathways_in_resource.delete()
+        self.session.commit()
+
+        return True
+
+    def get_pathways_from_resource(self, resource_name):
+        """Get pathways from a given database.
+
+        :param str resource_name: name of the database
+        :rtype: Optional[list[Pathway]]
+        """
+        return self.session.query(Pathway).filter(Pathway.resource_name == resource_name)
+
     def get_or_create_pathway(self, pathway_dict):
         """Get or create pathway.
 

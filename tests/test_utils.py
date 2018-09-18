@@ -7,7 +7,7 @@ import unittest
 from pybel import BELGraph
 from pybel.testing.utils import n
 from pybel.dsl import protein
-from pathme.graph_utils import get_contradiction_summary
+from pathme_viewer.graph_utils import get_contradiction_summary
 from pybel.constants import CAUSES_NO_CHANGE
 
 test_namespace_url = n()
@@ -54,3 +54,4 @@ class TestAnnotation(unittest.TestCase):
 
         for edge in contradictory_edges:
             self.assertIn(edge, contradictions)
+
