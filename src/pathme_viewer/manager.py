@@ -59,6 +59,13 @@ class Manager(object):
         """
         return self.session.query(func.count(Pathway)).group_by(Pathway.resource_name).all()
 
+    def get_all_pathways(self):
+        """Get all pathways in the database.
+
+        :rtype: list[Pathway]
+        """
+        return self.session.query(Pathway).all()
+
     def get_pathway_by_id(self, pathway_id, resource_name):
         """Get pathway by canonical identifier.
 
