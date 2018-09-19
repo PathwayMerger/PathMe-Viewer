@@ -17,6 +17,7 @@ from pathme.wikipathways.utils import (
     get_file_name_from_url,
     unzip_file
 )
+from pybel import union
 from .constants import DEFAULT_CACHE_CONNECTION
 from .load_db import load_kegg, load_reactome, load_wikipathways
 from .manager import Manager
@@ -130,6 +131,26 @@ def summarize(connection):
     m = Manager.from_connection(connection=connection)
 
     click.echo('The database contains {} pathways'.format(m.count_pathways()))
+
+
+@manage.command(help='Export pathways to tsv')
+@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
+@click.option('-a', '--all', is_flag=True)
+def export_to_tsv(connection, all):
+    """Summarize all."""
+    m = Manager.from_connection(connection=connection)
+
+    if all:
+        pathways = [
+            pathway.as_bel()
+            for pathway in m.get_all_pathways()
+        ]
+
+        graph = union(pathways)
+
+        with open("pathme_triplets.tsv", "w") as f:
+            for sub, obj, data in graph.edges(data=True):
+                print("%s\t%s\t%s" % (sub.as_bel(), data['relation'], obj.as_bel()), file=f)
 
 
 if __name__ == '__main__':
