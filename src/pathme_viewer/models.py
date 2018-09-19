@@ -8,6 +8,7 @@ from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy import LargeBinary, Text
 from sqlalchemy.ext.declarative import declarative_base
 
+from pybel import from_bytes
 from .constants import MODULE_NAME
 
 LONGBLOB = 4294967295
@@ -44,3 +45,10 @@ class Pathway(Base):
     def __str__(self):
         """Return Pathway name."""
         return self.name
+
+    def as_bel(self):
+        """Get this network and loads it into a :class:`BELGraph`.
+
+        :rtype: pybel.BELGraph
+        """
+        return from_bytes(self.blob)
