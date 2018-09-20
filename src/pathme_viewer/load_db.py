@@ -15,17 +15,14 @@ from pathme.reactome.rdf_sparql import reactome_to_bel
 from pathme.reactome.utils import untar_file
 from pathme.utils import make_downloader, get_files_in_folder
 from pathme.wikipathways.rdf_sparql import wikipathways_to_bel
-from pathme.wikipathways.utils import (
-    get_file_name_from_url,
-    get_wikipathways_files
-)
+from pathme.wikipathways.utils import get_file_name_from_url, get_wikipathways_files
 from .constants import HUMAN_WIKIPATHWAYS
 
 log = logging.getLogger(__name__)
 
 
 def import_folder(manager, folder, files, conversion_method, database, **kwargs):
-    """General function to import a folder into database.
+    """Import a given folder into database based on a conversion method.
 
     :param pathme_viewer.manager.Manager manager: PathMe manager
     :param str folder: folder to be imported

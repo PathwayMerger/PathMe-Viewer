@@ -5,6 +5,7 @@
 import os
 
 from bio2bel.utils import get_connection
+
 from pathme.cli import WIKIPATHWAYS_DIR
 
 

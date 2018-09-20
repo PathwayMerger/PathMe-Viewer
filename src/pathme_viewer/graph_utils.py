@@ -6,20 +6,19 @@ from operator import methodcaller
 
 from flask import abort, Response, jsonify, send_file
 from flask import current_app
-from pybel_tools.mutation.metadata import serialize_authors
-from pybel_tools.summary import relation_set_has_contradictions
-from six import BytesIO, StringIO
-
 from pybel import to_bel_lines, to_graphml, to_bytes, to_csv
 from pybel import union
 from pybel.constants import *
 from pybel.io import from_bytes
 from pybel.struct import add_annotation_value
 from pybel.struct.summary import get_annotation_values_by_annotation
+from pybel_tools.mutation.metadata import serialize_authors
+from pybel_tools.summary import relation_set_has_contradictions
+from six import BytesIO, StringIO
 
 
 def process_request(request):
-    """Return processed request as a dictionary.
+    """Process request and return it as a dict[pathway ids,resources].
 
     :param flask.request request: http request
     :rtype: dict
@@ -156,7 +155,6 @@ def export_graph(graph, format=None):
         data = to_json_custom(graph)
         return jsonify(data)
 
-
     elif format == 'bytes':
         data = BytesIO(to_bytes(graph))
         return send_file(
@@ -200,8 +198,7 @@ def export_graph(graph, format=None):
 def get_tree_annotations(graph):
     """Build tree structure with annotation for a given graph.
 
-    :param graph: A BEL Graph
-    :type graph: pybel.BELGraph
+    :param pybel.BELGraph graph: A BEL Graph
     :return: The JSON structure necessary for building the tree box
     :rtype: list[dict]
     """

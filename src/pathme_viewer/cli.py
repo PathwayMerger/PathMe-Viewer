@@ -10,6 +10,7 @@ import os
 import click
 from bio2bel_chebi import Manager as ChebiManager
 from bio2bel_hgnc import Manager as HgncManager
+from pybel import union
 
 from pathme.constants import DATA_DIR, KEGG, RDF_WIKIPATHWAYS, REACTOME, WIKIPATHWAYS
 from pathme.utils import make_downloader
@@ -17,7 +18,6 @@ from pathme.wikipathways.utils import (
     get_file_name_from_url,
     unzip_file
 )
-from pybel import union
 from .constants import DEFAULT_CACHE_CONNECTION
 from .load_db import load_kegg, load_reactome, load_wikipathways
 from .manager import Manager
