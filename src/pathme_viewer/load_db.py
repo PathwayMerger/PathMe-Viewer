@@ -6,6 +6,7 @@ import logging
 import os
 
 import tqdm
+from pybel import to_bytes
 
 from pathme.cli import KEGG_DIR, REACTOME_DIR
 from pathme.constants import KEGG, REACTOME, RDF_REACTOME, WIKIPATHWAYS
@@ -18,7 +19,6 @@ from pathme.wikipathways.utils import (
     get_file_name_from_url,
     get_wikipathways_files
 )
-from pybel import to_bytes
 from .constants import HUMAN_WIKIPATHWAYS
 
 log = logging.getLogger(__name__)
@@ -67,6 +67,13 @@ def load_kegg(manager, hgnc_manager, chebi_manager, folder=None, flatten=None):
     kegg_data_folder = folder or KEGG_DIR
 
     kgml_files = get_files_in_folder(kegg_data_folder)
+
+    # Skip not KGML files
+    kgml_files = [
+        file
+        for file in kgml_files
+        if file.endswith('.xml')
+    ]
 
     if not kgml_files:
         log.warning("There are no KGML files in %s. Please run 'python3 -m pathme kegg download'", kegg_data_folder)
