@@ -8,7 +8,7 @@ import os
 import tqdm
 from pybel import to_bytes
 
-from pathme.cli import KEGG_DIR, REACTOME_DIR
+from pathme.cli import KEGG_FILES, REACTOME_FILES
 from pathme.constants import KEGG, REACTOME, RDF_REACTOME, WIKIPATHWAYS
 from pathme.kegg.convert_to_bel import kegg_to_bel
 from pathme.reactome.rdf_sparql import reactome_to_bel
@@ -61,7 +61,7 @@ def load_kegg(manager, hgnc_manager, chebi_manager, folder=None, flatten=None):
     :param bio2bel_chebi.Manager chebi_manager: ChEBI manager
     :param str folder: folder
     """
-    kegg_data_folder = folder or KEGG_DIR
+    kegg_data_folder = folder or KEGG_FILES
 
     kgml_files = get_files_in_folder(kegg_data_folder)
 
@@ -93,7 +93,7 @@ def load_reactome(manager, hgnc_manager, folder=None):
     :param pathme_viewer.manager.Manager manager: PathMe manager
     :param Optional[str] folder: folder
     """
-    reactome_data_folder = folder or REACTOME_DIR
+    reactome_data_folder = folder or REACTOME_FILES
 
     cached_file = os.path.join(reactome_data_folder, get_file_name_from_url(RDF_REACTOME))
     make_downloader(RDF_REACTOME, cached_file, REACTOME, untar_file)
@@ -123,5 +123,4 @@ def load_wikipathways(manager, folder=None, connection=None, only_canonical=True
         connection,
         only_canonical
     )
-
     import_folder(manager, wikipathways_data_folder, files, wikipathways_to_bel, WIKIPATHWAYS)

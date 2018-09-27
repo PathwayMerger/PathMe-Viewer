@@ -4,26 +4,11 @@
 
 import os
 
-from bio2bel.utils import get_connection
-
-from pathme.cli import WIKIPATHWAYS_DIR
-
-
-def get_data_dir(module_name):
-    """Ensures the appropriate PathMe data directory exists for the given module, then returns the file path
-
-    :param str module_name: The name of the module. Ex: 'pathme'
-    :return: The module's data directory
-    :rtype: str
-    """
-    module_name = module_name.lower()
-    data_dir = os.path.join(PATHME_DIR, module_name)
-    os.makedirs(data_dir, exist_ok=True)
-    return data_dir
-
+from pathme.cli import WIKIPATHWAYS_FILES
+from pathme.constants import get_connection
 
 MODULE_NAME = 'pathme_viewer'
 PATHME_DIR = os.environ.get('PATHME_DIRECTORY', os.path.join(os.path.expanduser('~'), '.pathme'))
 DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)
 
-HUMAN_WIKIPATHWAYS = os.path.join(WIKIPATHWAYS_DIR, 'wp', 'Human')
+HUMAN_WIKIPATHWAYS = os.path.join(WIKIPATHWAYS_FILES, 'wp', 'Human')
