@@ -11,6 +11,7 @@ from pybel import to_bytes
 from pathme.cli import KEGG_FILES, REACTOME_FILES
 from pathme.constants import KEGG, REACTOME, RDF_REACTOME, WIKIPATHWAYS
 from pathme.kegg.convert_to_bel import kegg_to_bel
+from pathme.kegg.utils import download_kgml_files, get_kegg_pathway_ids
 from pathme.reactome.rdf_sparql import reactome_to_bel
 from pathme.reactome.utils import untar_file
 from pathme.utils import make_downloader, get_files_in_folder
@@ -73,7 +74,10 @@ def load_kegg(manager, hgnc_manager, chebi_manager, folder=None, flatten=None):
     ]
 
     if not kgml_files:
-        log.warning("There are no KGML files in %s. Please run 'python3 -m pathme kegg download'", kegg_data_folder)
+        log.warning("There are no KGML files in %s. Using Bio2BEL KEGG to download them.'", kegg_data_folder)
+        kegg_ids = get_kegg_pathway_ids()
+
+        download_kgml_files(kegg_ids)
 
     import_folder(
         manager,

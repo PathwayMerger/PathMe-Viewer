@@ -99,7 +99,7 @@ def drop(debug, yes, connection):
 @click.option('-wp', '--wikipathways_path', help='WikiPathways data folder. Defaults to {}'.format(WIKIPATHWAYS_DIR))
 @click.option('-f', '--flatten', help='Flat complexes/composites. Defaults to False')
 def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatten):
-    """Loads databases into PathMe DB"""
+    """Loads databases into PathMe DB."""
     manager = Manager.from_connection(connection=connection)
 
     log.info('Initiating HGNC Manager')
@@ -110,13 +110,15 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
 
     """Load KEGG"""
 
-    log.info(
-        'Downloading KGML files, please make sure you have read KEGG licensing (see: https://www.kegg.jp/kegg/rest/).'
-        'These files cannot be distributed and the use must be academic only.'
-        'PathMe developers are not responsible of end use of this data.'
-    )
+    if click.confirm(
+            'You are about to download KGML files from KEGG.\n'
+            'Please make sure you have read KEGG license (see: https://www.kegg.jp/kegg/rest/).'
+            ' These files cannot be distributed and their use must be exclusively academic.\n'
+            'We (PathMe developers) are not responsible for end use of this data.\n'
+    ):
+        click.echo('You have read and accepted the conditions stated above.\n')
 
-    load_kegg(manager, hgnc_manager, chebi_manager, kegg_path, flatten)
+        load_kegg(manager, hgnc_manager, chebi_manager, kegg_path, flatten)
 
     """Load WikiPathways"""
 
