@@ -110,6 +110,12 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
 
     """Load KEGG"""
 
+    log.info(
+        'Downloading KGML files, please make sure you have read KEGG licensing (see: https://www.kegg.jp/kegg/rest/).'
+        'These files cannot be distributed and the use must be academic only.'
+        'PathMe developers are not responsible of end use of this data.'
+    )
+
     load_kegg(manager, hgnc_manager, chebi_manager, kegg_path, flatten)
 
     """Load WikiPathways"""
