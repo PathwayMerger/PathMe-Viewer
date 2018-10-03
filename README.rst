@@ -79,6 +79,6 @@ modified by changing the default parameters (run: "python3 -m pathme_viewer web 
 .. |pypi_license| image:: https://img.shields.io/pypi/l/pathme_viewer.svg
     :alt: Apache-2.0
 
-.. |zenodo| image:: https://zenodo.org/badge/1443250.svg
-   :target: https://zenodo.org/badge/latestdoi/1443250
+.. |zenodo| image:: https://zenodo.org/badge/144898535.svg
+   :target: https://zenodo.org/badge/latestdoi/144898535
 
