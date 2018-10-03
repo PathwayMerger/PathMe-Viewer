@@ -48,8 +48,8 @@ class TestAnnotation(unittest.TestCase):
         contradictory_edges = get_contradiction_summary(self.graph)
 
         contradictions = [
-            (('Protein', 'test', '0'), ('Protein', 'test', '1'), {'decreases', 'increases'}),
-            (('Protein', 'test', '3'), ('Protein', 'test', '4'), {'causesNoChange', 'increases'})
+            (protein(namespace='test', name='0'), protein(namespace='test', name='1'), {'decreases', 'increases'}),
+            (protein(namespace='test', name='3'), protein(namespace='test', name='4'), {'causesNoChange', 'increases'})
         ]
 
         for edge in contradictory_edges:
