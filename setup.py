@@ -34,7 +34,8 @@ INSTALL_REQUIRES = [
     'rdflib-jsonld',
     'requests',
     'bio2bel',
-    'pybel'
+    'pybel',
+    'pybel_tools',
 ]
 
 HERE = os.path.abspath(os.path.dirname(__file__))
