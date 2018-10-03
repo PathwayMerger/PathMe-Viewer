@@ -12,7 +12,13 @@ from bio2bel_chebi import Manager as ChebiManager
 from bio2bel_hgnc import Manager as HgncManager
 from pybel import union
 
-from pathme.constants import DATA_DIR, KEGG, RDF_WIKIPATHWAYS, REACTOME, WIKIPATHWAYS
+from pathme.constants import (
+    KEGG_DIR, RDF_WIKIPATHWAYS,
+    REACTOME_DIR,
+    WIKIPATHWAYS,
+    WIKIPATHWAYS_DIR,
+    ensure_pathme_folders
+)
 from pathme.utils import make_downloader
 from pathme.wikipathways.utils import (
     get_file_name_from_url,
@@ -25,14 +31,8 @@ from .models import Base
 
 log = logging.getLogger(__name__)
 
-KEGG_DIR = os.path.join(DATA_DIR, KEGG)
-REACTOME_DIR = os.path.join(DATA_DIR, REACTOME)
-WIKIPATHWAYS_DIR = os.path.join(DATA_DIR, WIKIPATHWAYS)
-
 # Ensure data folders are created
-os.makedirs(KEGG_DIR, exist_ok=True)
-os.makedirs(REACTOME_DIR, exist_ok=True)
-os.makedirs(WIKIPATHWAYS_DIR, exist_ok=True)
+ensure_pathme_folders()
 
 
 def set_debug(level):
