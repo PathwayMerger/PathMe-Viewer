@@ -123,7 +123,7 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
         click.echo('You have read and accepted the conditions stated above.\n')
 
         # Check if kegg is already in the database
-        kegg_pathways = manager.get_pathways_by_resource(KEGG)
+        kegg_pathways = manager.get_pathways_from_resource(KEGG)
 
         if len(kegg_pathways) < 300:
             load_kegg(manager, hgnc_manager, chebi_manager, kegg_path, flatten)
@@ -136,7 +136,7 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
     make_downloader(RDF_WIKIPATHWAYS, cached_file, WIKIPATHWAYS, unzip_file)
 
     # Check if wikipathways is already in the database
-    wikipathways_pathways = manager.get_pathways_by_resource(WIKIPATHWAYS)
+    wikipathways_pathways = manager.get_pathways_from_resource(WIKIPATHWAYS)
 
     if len(wikipathways_pathways) < 300:
         load_wikipathways(manager, wikipathways_path)
@@ -146,7 +146,7 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
     """Load Reactome"""
 
     # Check if Reactome is already in the database
-    reactome_pathways = manager.get_pathways_by_resource(REACTOME)
+    reactome_pathways = manager.get_pathways_from_resource(REACTOME)
 
     if len(reactome_pathways) < 2000:
         load_reactome(manager, hgnc_manager, reactome_path)

@@ -22,17 +22,17 @@ from .constants import HUMAN_WIKIPATHWAYS
 log = logging.getLogger(__name__)
 
 
-def _prepare_pathway_model(name, database, bel_graph):
+def _prepare_pathway_model(pathway_id, database, bel_graph):
     """Prepare dictionary pathway model.
 
-    :param str name:
-    :param str database:
-    :param pybel.BELGraph bel_graph:
+    :param str pathway_id: identifier
+    :param str database: database name
+    :param pybel.BELGraph bel_graph: graph
     :rtype: dict
     :return: pathway model in dict
     """
     return {
-        'pathway_id': name,
+        'pathway_id': pathway_id,
         'resource_name': database,
         'name': bel_graph.document['name'],
         'version': bel_graph.document['version'],
@@ -59,7 +59,13 @@ def import_from_pickle(manager, folder, files, database):
 
         bel_pathway = from_pickle(file_path)
 
-        pathway_dict = _prepare_pathway_model(os.path.splitext(file_name)[0], database, bel_pathway)
+        pathway_id = os.path.splitext(file_name)[0]
+
+        # KEGG files have a special format (prefix: unflatten/flatten needs to be removed)
+        if database == KEGG:
+            pathway_id = pathway_id.split('_')[0]
+
+        pathway_dict = _prepare_pathway_model(pathway_id, database, bel_pathway)
 
         _ = manager.get_or_create_pathway(pathway_dict)
 
@@ -102,36 +108,37 @@ def load_kegg(manager, hgnc_manager, chebi_manager, folder=None, flatten=None):
         log.info('You seem to already have created BEL Graphs using PathMe. The database will be populated using those')
         import_from_pickle(manager, KEGG_BEL, pickles, KEGG)
 
-    # 2. Check that KGML files are already downloaded
-    kegg_data_folder = folder or KEGG_FILES
+    else:
+        # 2. Check that KGML files are already downloaded
+        kegg_data_folder = folder or KEGG_FILES
 
-    kgml_files = get_files_in_folder(kegg_data_folder)
+        kgml_files = get_files_in_folder(kegg_data_folder)
 
-    # Skip not KGML files
-    kgml_files = [
-        file
-        for file in kgml_files
-        if file.endswith('.xml')
-    ]
+        # Skip not KGML files
+        kgml_files = [
+            file
+            for file in kgml_files
+            if file.endswith('.xml')
+        ]
 
-    # If there are no KGML files, download them or ask the user to populate Bio2BEL KEGG
-    if not kgml_files:
-        log.warning("There are no KGML files in %s. Using Bio2BEL KEGG to download them.'", kegg_data_folder)
-        kegg_ids = get_kegg_pathway_ids()
+        # If there are no KGML files, download them or ask the user to populate Bio2BEL KEGG
+        if not kgml_files:
+            log.warning("There are no KGML files in %s. Using Bio2BEL KEGG to download them.'", kegg_data_folder)
+            kegg_ids = get_kegg_pathway_ids()
 
-        download_kgml_files(kegg_ids)
+            download_kgml_files(kegg_ids)
 
-    # 3. Parse KGML files to populate DB
-    import_from_pathme(
-        manager,
-        kegg_data_folder,
-        kgml_files,
-        kegg_to_bel,
-        KEGG,
-        hgnc_manager=hgnc_manager,
-        chebi_manager=chebi_manager,
-        flatten=True if flatten is True else False
-    )
+        # 3. Parse KGML files to populate DB
+        import_from_pathme(
+            manager,
+            kegg_data_folder,
+            kgml_files,
+            kegg_to_bel,
+            KEGG,
+            hgnc_manager=hgnc_manager,
+            chebi_manager=chebi_manager,
+            flatten=True if flatten is True else False
+        )
 
 
 def load_reactome(manager, hgnc_manager, folder=None):
@@ -147,21 +154,22 @@ def load_reactome(manager, hgnc_manager, folder=None):
         log.info('You seem to already have created BEL Graphs using PathMe. The database will be populated using those')
         import_from_pickle(manager, REACTOME_BEL, pickles, REACTOME)
 
-    # 2. Check if RDF files are downloaded, if not download them
-    reactome_data_folder = folder or REACTOME_FILES
+    else:
+        # 2. Check if RDF files are downloaded, if not download them
+        reactome_data_folder = folder or REACTOME_FILES
 
-    cached_file = os.path.join(reactome_data_folder, get_file_name_from_url(RDF_REACTOME))
-    make_downloader(RDF_REACTOME, cached_file, REACTOME, untar_file)
+        cached_file = os.path.join(reactome_data_folder, get_file_name_from_url(RDF_REACTOME))
+        make_downloader(RDF_REACTOME, cached_file, REACTOME, untar_file)
 
-    # 3. Parse RDF file to populate DB
-    import_from_pathme(
-        manager,
-        reactome_data_folder,
-        ['Homo_sapiens.owl'],
-        reactome_to_bel,
-        REACTOME,
-        hgnc_manager=hgnc_manager
-    )
+        # 3. Parse RDF file to populate DB
+        import_from_pathme(
+            manager,
+            reactome_data_folder,
+            ['Homo_sapiens.owl'],
+            reactome_to_bel,
+            REACTOME,
+            hgnc_manager=hgnc_manager
+        )
 
 
 def load_wikipathways(manager, folder=None, connection=None, only_canonical=True):
@@ -179,14 +187,15 @@ def load_wikipathways(manager, folder=None, connection=None, only_canonical=True
         log.info('You seem to already have created BEL Graphs using PathMe. The database will be populated using those')
         import_from_pickle(manager, WIKIPATHWAYS_BEL, pickles, WIKIPATHWAYS)
 
-    # 2. Check if RDF files are downloaded, if not download them
-    wikipathways_data_folder = folder or HUMAN_WIKIPATHWAYS
+    else:
+        # 2. Check if RDF files are downloaded, if not download them
+        wikipathways_data_folder = folder or HUMAN_WIKIPATHWAYS
 
-    files = get_wikipathways_files(
-        wikipathways_data_folder,
-        connection,
-        only_canonical
-    )
+        files = get_wikipathways_files(
+            wikipathways_data_folder,
+            connection,
+            only_canonical
+        )
 
-    # 3. Parse RDF file to populate DB
-    import_from_pathme(manager, wikipathways_data_folder, files, wikipathways_to_bel, WIKIPATHWAYS)
+        # 3. Parse RDF file to populate DB
+        import_from_pathme(manager, wikipathways_data_folder, files, wikipathways_to_bel, WIKIPATHWAYS)
