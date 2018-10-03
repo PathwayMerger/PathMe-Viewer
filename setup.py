@@ -34,6 +34,8 @@ INSTALL_REQUIRES = [
     'rdflib-jsonld',
     'requests',
     'bio2bel',
+    'bio2bel_chebi',
+    'bio2bel_hgnc',
     'pybel',
     'pybel_tools',
 ]
