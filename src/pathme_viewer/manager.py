@@ -57,7 +57,9 @@ class Manager(object):
 
         :rtype: int
         """
-        return self.session.query(func.count(Pathway)).group_by(Pathway.resource_name).all()
+        return self.session.query(
+            Pathway.resource_name, func.count(Pathway.resource_name)
+        ).group_by(Pathway.resource_name).all()
 
     def get_all_pathways(self):
         """Get all pathways in the database.

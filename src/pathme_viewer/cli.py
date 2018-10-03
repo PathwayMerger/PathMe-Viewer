@@ -161,7 +161,16 @@ def summarize(connection):
     """Summarize all."""
     m = Manager.from_connection(connection=connection)
 
-    click.echo('The database contains {} pathways'.format(m.count_pathways()))
+    pathway_count = m.count_pathways_by_resource()
+
+    if not pathway_count:
+        click.echo('Database is empty')
+
+    else:
+        click.echo('Summary of the database')
+        click.echo('-----------------------')
+        for database, number_of_pathways in pathway_count:
+            click.echo('{}: {} pathways'.format(database, number_of_pathways))
 
 
 @manage.command(help='Export pathways to tsv')
