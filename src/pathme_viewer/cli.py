@@ -20,6 +20,7 @@ from pathme.constants import (
     REACTOME_DIR,
     WIKIPATHWAYS,
     WIKIPATHWAYS_DIR,
+    WIKIPATHWAYS_FILES,
     ensure_pathme_folders
 )
 from pathme.utils import make_downloader
@@ -132,14 +133,14 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
 
     """Load WikiPathways"""
 
-    cached_file = os.path.join(WIKIPATHWAYS_DIR, get_file_name_from_url(RDF_WIKIPATHWAYS))
-    make_downloader(RDF_WIKIPATHWAYS, cached_file, WIKIPATHWAYS, unzip_file)
+    cached_file = os.path.join(WIKIPATHWAYS_FILES, get_file_name_from_url(RDF_WIKIPATHWAYS))
+    make_downloader(RDF_WIKIPATHWAYS, cached_file, WIKIPATHWAYS_FILES, unzip_file)
 
     # Check if wikipathways is already in the database
     wikipathways_pathways = manager.get_pathways_from_resource(WIKIPATHWAYS)
 
     if len(wikipathways_pathways) < 300:
-        load_wikipathways(manager, wikipathways_path)
+        load_wikipathways(manager, hgnc_manager, wikipathways_path)
     else:
         log.info('WikiPathways seems to be already in the database')
 

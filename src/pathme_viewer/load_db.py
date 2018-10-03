@@ -145,6 +145,7 @@ def load_reactome(manager, hgnc_manager, folder=None):
     """Load Reactome files in PathMe DB.
 
     :param pathme_viewer.manager.Manager manager: PathMe manager
+    :param bio2bel_hgnc.manager.Manager hgnc_manager: HGNC manager
     :param Optional[str] folder: folder
     """
     # 1. Check if there are pickles in the Reactome folder. If there are already pickles, use them to populate db
@@ -159,7 +160,7 @@ def load_reactome(manager, hgnc_manager, folder=None):
         reactome_data_folder = folder or REACTOME_FILES
 
         cached_file = os.path.join(reactome_data_folder, get_file_name_from_url(RDF_REACTOME))
-        make_downloader(RDF_REACTOME, cached_file, REACTOME, untar_file)
+        make_downloader(RDF_REACTOME, cached_file, reactome_data_folder, untar_file)
 
         # 3. Parse RDF file to populate DB
         import_from_pathme(
@@ -172,10 +173,11 @@ def load_reactome(manager, hgnc_manager, folder=None):
         )
 
 
-def load_wikipathways(manager, folder=None, connection=None, only_canonical=True):
+def load_wikipathways(manager, hgnc_manager, folder=None, connection=None, only_canonical=True):
     """Load WikiPathways files in PathMe DB.
 
     :param pathme_viewer.manager.Manager manager: PathMe manager
+    :param bio2bel_hgnc.manager.Manager hgnc_manager: HGNC manager
     :param Optional[str] folder: folder
     :param Optional[str] connection: database connection
     :param Optional[bool] only_canonical: only identifiers present in WP bio2bel db
@@ -198,4 +200,11 @@ def load_wikipathways(manager, folder=None, connection=None, only_canonical=True
         )
 
         # 3. Parse RDF file to populate DB
-        import_from_pathme(manager, wikipathways_data_folder, files, wikipathways_to_bel, WIKIPATHWAYS)
+        import_from_pathme(
+            manager,
+            wikipathways_data_folder,
+            files,
+            wikipathways_to_bel,
+            WIKIPATHWAYS,
+            hgnc_manager=hgnc_manager
+        )
