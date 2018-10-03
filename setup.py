@@ -38,6 +38,7 @@ INSTALL_REQUIRES = [
     'bio2bel_hgnc',
     'pybel',
     'pybel_tools',
+    'pathme',
 ]
 
 HERE = os.path.abspath(os.path.dirname(__file__))
