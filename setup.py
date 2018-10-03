@@ -40,6 +40,17 @@ INSTALL_REQUIRES = [
     'pybel_tools',
     'pathme',
 ]
+EXTRAS_REQUIRE = {
+    'web': [
+        'flask',
+        'flask_admin',
+    ],
+    'docs': [
+        'sphinx',
+        'sphinx-rtd-theme',
+        'sphinx-click',
+    ],
+}
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
