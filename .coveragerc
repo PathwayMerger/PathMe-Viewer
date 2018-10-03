@@ -1,0 +1,19 @@
+[run]
+branch = True
+source = pathme_viewer
+omit =
+    src/pathme_viewer/__main__.py
+    src/pathme_viewer/cli.py
+    tests/*
+    docs/*
+
+[paths]
+source =
+    src/pathme_viewer
+    .tox/*/lib/python*/site-packages/pathme_viewer
+
+[report]
+show_missing = True
+exclude_lines =
+    def __str__
+    def __repr__
