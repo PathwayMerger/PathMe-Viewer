@@ -1,12 +1,11 @@
-PathMe Viewer
-=============
+PathMe Viewer |build| |coverage| |docs| |zenodo|
+================================================
 
 This plugin initializes the pathway viewer in ComPath that allows to explore overlaps between pathways using
 the canonical mappings.
 
-
-Installation
-------------
+Installation |pypi_version| |python_versions| |pypi_license|
+------------------------------------------------------------
 1. ``pathme_viewer`` can be installed with the following commands:
 
 .. code-block:: sh
@@ -53,3 +52,32 @@ Once the desired pathway databases are loaded, you can deploy the web applicatio
 
 Note that the database runs by default in the following port: http://0.0.0.0:5000/. The Flask host and port can be
 modified by changing the default parameters (run: "python3 -m pathme_viewer web --help" for more info).
+
+
+.. |build| image:: https://travis-ci.org/ComPath/PathMe-Viewer.svg?branch=master
+    :target: https://travis-ci.org/ComPath/PathMe-Viewer
+    :alt: Build Status
+
+.. |coverage| image:: https://codecov.io/gh/ComPath/PathMe-Viewer/coverage.svg?branch=master
+    :target: https://codecov.io/gh/ComPath/PathMe-Viewer?branch=master
+    :alt: Coverage Status
+
+.. |docs| image:: http://readthedocs.org/projects/pathme_viewer/badge/?version=latest
+    :target: https://pathme_viewer.readthedocs.io/en/latest/
+    :alt: Documentation Status
+
+.. |climate| image:: https://codeclimate.com/github/compath/pathme_viewer/badges/gpa.svg
+    :target: https://codeclimate.com/github/compath/pathme_viewer
+    :alt: Code Climate
+
+.. |python_versions| image:: https://img.shields.io/pypi/pyversions/pathme_viewer.svg
+    :alt: Stable Supported Python Versions
+
+.. |pypi_version| image:: https://img.shields.io/pypi/v/pathme_viewer.svg
+    :alt: Current version on PyPI
+
+.. |pypi_license| image:: https://img.shields.io/pypi/l/pathme_viewer.svg
+    :alt: Apache-2.0
+
+.. |zenodo| image:: https://zenodo.org/badge/1443250.svg
+    :target: https://zenodo.org/badge/1443250/fixme
