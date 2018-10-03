@@ -86,6 +86,14 @@ class Manager(object):
         condition = and_(Pathway.name == pathway_name, Pathway.resource_name == resource_name)
         return self.session.query(Pathway).filter(condition).one_or_none()
 
+    def get_pathways_by_resource(self):
+        """Get pathways belonging to a specific resource.
+
+        :param str resource_name: name of the database
+        :rtype: int
+        """
+        return self.session.query(Pathway.resource_name).all()
+
     def create_pathway(self, pathway_dict):
         """Create pathway.
 

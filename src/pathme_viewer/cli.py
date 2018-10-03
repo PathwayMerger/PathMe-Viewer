@@ -13,7 +13,10 @@ from bio2bel_hgnc import Manager as HgncManager
 from pybel import union
 
 from pathme.constants import (
-    KEGG_DIR, RDF_WIKIPATHWAYS,
+    KEGG,
+    KEGG_DIR,
+    RDF_WIKIPATHWAYS,
+    REACTOME,
     REACTOME_DIR,
     WIKIPATHWAYS,
     WIKIPATHWAYS_DIR,
@@ -110,6 +113,7 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
 
     """Load KEGG"""
 
+    # User must agree to KEGG License
     if click.confirm(
             'You are about to download KGML files from KEGG.\n'
             'Please make sure you have read KEGG license (see: https://www.kegg.jp/kegg/rest/).'
@@ -118,18 +122,36 @@ def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatt
     ):
         click.echo('You have read and accepted the conditions stated above.\n')
 
-        load_kegg(manager, hgnc_manager, chebi_manager, kegg_path, flatten)
+        # Check if kegg is already in the database
+        kegg_pathways = manager.get_pathways_by_resource(KEGG)
+
+        if len(kegg_pathways) < 300:
+            load_kegg(manager, hgnc_manager, chebi_manager, kegg_path, flatten)
+        else:
+            log.info('KEGG seems to be already in the database')
 
     """Load WikiPathways"""
 
     cached_file = os.path.join(WIKIPATHWAYS_DIR, get_file_name_from_url(RDF_WIKIPATHWAYS))
     make_downloader(RDF_WIKIPATHWAYS, cached_file, WIKIPATHWAYS, unzip_file)
 
-    load_wikipathways(manager, wikipathways_path)
+    # Check if wikipathways is already in the database
+    wikipathways_pathways = manager.get_pathways_by_resource(WIKIPATHWAYS)
+
+    if len(wikipathways_pathways) < 300:
+        load_wikipathways(manager, wikipathways_path)
+    else:
+        log.info('WikiPathways seems to be already in the database')
 
     """Load Reactome"""
 
-    load_reactome(manager, hgnc_manager, reactome_path)
+    # Check if Reactome is already in the database
+    reactome_pathways = manager.get_pathways_by_resource(REACTOME)
+
+    if len(reactome_pathways) < 2000:
+        load_reactome(manager, hgnc_manager, reactome_path)
+    else:
+        log.info('Reactome seems to be already in the database')
 
 
 @manage.command(help='Summarizes Entries in Database')
