@@ -10,7 +10,6 @@ matrix:
     - env: TOXENV=rst-lint
     - env: TOXENV=flake8
   allow_failures:
-    - env: TOXENV=py
     - env: TOXENV=flake8
 install:
 - pip install --upgrade pip
