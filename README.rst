@@ -80,4 +80,5 @@ modified by changing the default parameters (run: "python3 -m pathme_viewer web 
     :alt: Apache-2.0
 
 .. |zenodo| image:: https://zenodo.org/badge/1443250.svg
-    :target: https://zenodo.org/badge/latestdoi/1443250
+   :target: https://zenodo.org/badge/latestdoi/1443250
+
