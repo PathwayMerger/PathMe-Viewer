@@ -102,7 +102,7 @@ def drop(debug, yes, connection):
 @click.option('-rp', '--reactome_path', help='Reactome data folder. Defaults to {}'.format(REACTOME_DIR))
 @click.option('-wp', '--wikipathways_path', help='WikiPathways data folder. Defaults to {}'.format(WIKIPATHWAYS_DIR))
 @click.option('-f', '--flatten', help='Flat complexes/composites. Defaults to False')
-def load_database(connection, kegg_path, reactome_path, wikipathways_path, flatten):
+def load(connection, kegg_path, reactome_path, wikipathways_path, flatten):
     """Loads databases into PathMe DB."""
     manager = Manager.from_connection(connection=connection)
 

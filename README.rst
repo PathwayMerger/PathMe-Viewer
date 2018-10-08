@@ -28,7 +28,7 @@ command to load the database (note that the first time it runs might take a coup
 
 .. code-block:: python
 
-    python3 -m pathme_viewer manage load_database
+    python3 -m pathme_viewer manage load
 
 In order to check the status of the database, you can run:
 
