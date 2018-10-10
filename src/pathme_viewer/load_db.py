@@ -6,7 +6,6 @@ import logging
 import os
 
 import tqdm
-from pybel import from_pickle, to_bytes
 
 from pathme.cli import KEGG_FILES, REACTOME_FILES
 from pathme.constants import KEGG, KEGG_BEL, REACTOME, REACTOME_BEL, RDF_REACTOME, WIKIPATHWAYS, WIKIPATHWAYS_BEL
@@ -17,6 +16,7 @@ from pathme.reactome.utils import untar_file
 from pathme.utils import make_downloader, get_files_in_folder
 from pathme.wikipathways.rdf_sparql import wikipathways_to_bel
 from pathme.wikipathways.utils import get_file_name_from_url, get_wikipathways_files
+from pybel import from_pickle, to_bytes
 from .constants import HUMAN_WIKIPATHWAYS
 
 log = logging.getLogger(__name__)
@@ -40,7 +40,9 @@ def _prepare_pathway_model(pathway_id, database, bel_graph):
         'number_of_edges': bel_graph.number_of_edges(),
         'authors': bel_graph.document['authors'],
         'contact': bel_graph.document['contact'],
-        'description': bel_graph.document.get('description'),
+        'description': bel_graph.document.get('description')
+        if isinstance(bel_graph.document.get('description'), str)
+        else '{}'.format(bel_graph.document.get('description')),
         'pybel_version': bel_graph.pybel_version,
         'blob': to_bytes(bel_graph)
     }
