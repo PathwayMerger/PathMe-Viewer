@@ -131,6 +131,8 @@ def get_network_tree():
     pathways = process_request(request)
 
     graph = merge_pathways(pathways)
+
+    # Returns annotation in graph
     return jsonify(get_tree_annotations(graph))
 
 

@@ -6,15 +6,26 @@ from operator import methodcaller
 
 from flask import abort, Response, jsonify, send_file
 from flask import current_app
+from pybel_tools.mutation.metadata import serialize_authors
+from pybel_tools.summary import relation_set_has_contradictions
+from six import BytesIO, StringIO
+
 from pybel import to_bel_lines, to_graphml, to_bytes, to_csv
 from pybel import union
 from pybel.constants import *
 from pybel.io import from_bytes
 from pybel.struct import add_annotation_value
 from pybel.struct.summary import get_annotation_values_by_annotation
-from pybel_tools.mutation.metadata import serialize_authors
-from pybel_tools.summary import relation_set_has_contradictions
-from six import BytesIO, StringIO
+
+
+def add_annotation_key(graph):
+    """Add annotation key in data (in place operation).
+
+    :param pybel.BELGraph graph: BEL Graph
+    """
+    for u, v, k in graph.edges(keys=True):
+        if ANNOTATIONS not in graph[u][v][k]:
+            graph[u][v][k][ANNOTATIONS] = {}
 
 
 def process_request(request):
@@ -59,6 +70,8 @@ def merge_pathways(pathways):
         graph.annotation_pattern['PathwayID'] = '.*'
         graph.annotation_pattern['Pathway name'] = '.*'
         graph.annotation_list['Interesting edge'] = {'Contradicts', 'May contradict'}
+
+        add_annotation_key(graph)
 
         add_annotation_value(graph, 'Pathway name', pathway.name)
         add_annotation_value(graph, 'Database', pathway.resource_name)

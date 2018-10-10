@@ -76,6 +76,7 @@ function updateGroups(links, paths) {
             return d === subgraph;
         }).attr('transform', 'scale(1) translate(0,0)')
             .attr('d', function (d) {
+
                 polygon = polygonGenerator(subgraph, links);
                 centroid = d3.polygonCentroid(polygon);
 
