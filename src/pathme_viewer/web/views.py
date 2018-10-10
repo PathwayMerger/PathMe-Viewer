@@ -120,7 +120,7 @@ def get_network():
 
     graph = merge_pathways(pathways)
 
-    log.info('Exporting graph with {} nodes and {} edges'.format(graph.number_of_nodes(), graph.number_of_edges()))
+    log.info('Exporting merged graph with {} nodes and {} edges'.format(graph.number_of_nodes(), graph.number_of_edges()))
 
     return export_graph(graph, request.args.get('format'))
 

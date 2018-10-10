@@ -9,9 +9,8 @@ import os
 
 import click
 from bio2bel_chebi import Manager as ChebiManager
-from bio2bel_hgnc import Manager as HgncManager
-from pybel import union
 
+from bio2bel_hgnc import Manager as HgncManager
 from pathme.constants import (
     KEGG,
     KEGG_DIR,
@@ -28,6 +27,7 @@ from pathme.wikipathways.utils import (
     get_file_name_from_url,
     unzip_file
 )
+from pybel import union
 from .constants import DEFAULT_CACHE_CONNECTION
 from .load_db import load_kegg, load_reactome, load_wikipathways
 from .manager import Manager
@@ -55,7 +55,7 @@ def set_debug_param(debug):
 @click.group(help='PathMe')
 def main():
     """Main click method"""
-    logging.basicConfig(level=20, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+    logging.basicConfig(level=10, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
 
 @main.command()
@@ -63,9 +63,17 @@ def main():
 @click.option('--port', type=int, default=5000, help='Flask port. Defaults to 5000')
 @click.option('--template', help='Defaults to "../templates"')
 @click.option('--static', help='Defaults to "../static"')
-def web(host, port, template, static):
+@click.option('-v', '--verbose', is_flag=True)
+def web(host, port, template, static, verbose):
     """Run web service."""
     from .web.web import create_app
+
+    if verbose:
+        log.setLevel(logging.DEBUG)
+        log.debug('Debug mode activated')
+    else:
+        log.setLevel(logging.INFO)
+
     app = create_app(template_folder=template, static_folder=static)
     app.run(host=host, port=port)
 

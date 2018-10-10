@@ -77,6 +77,10 @@ def merge_pathways(pathways):
         add_annotation_value(graph, 'Database', pathway.resource_name)
         add_annotation_value(graph, 'PathwayID', pathway.pathway_id)
 
+        log.debug('Adding graph {} {}:with {} nodes and {} edges'.format(
+            name, resource, graph.number_of_nodes(), graph.number_of_edges())
+        )
+
         networks.append(graph)
 
     if not networks:
