@@ -53,6 +53,15 @@ Once the desired pathway databases are loaded, you can deploy the web applicatio
 Note that the database runs by default in the following port: http://0.0.0.0:5000/. The Flask host and port can be
 modified by changing the default parameters (run: "python3 -m pathme_viewer web --help" for more info).
 
+How to Use
+----------
+
+Here is an example of the visualization of Apoptosis equivalent pathways.
+
+.. image:: https://github.com/ComPath/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/visualization_example.png
+    :width: 500px
+
+
 
 .. |build| image:: https://travis-ci.org/ComPath/PathMe-Viewer.svg?branch=master
     :target: https://travis-ci.org/ComPath/PathMe-Viewer
