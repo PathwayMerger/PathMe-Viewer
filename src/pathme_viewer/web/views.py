@@ -16,8 +16,8 @@ from flask import (
 from flask_admin.contrib.sqla import ModelView
 from pkg_resources import resource_filename
 
-from ..graph_utils import export_graph, merge_pathways, get_tree_annotations, process_request
-from ..models import Pathway
+from pathme_viewer.graph_utils import export_graph, merge_pathways, get_tree_annotations, process_request
+from pathme_viewer.models import Pathway
 
 log = logging.getLogger(__name__)
 time_instantiated = str(datetime.datetime.now())
@@ -106,9 +106,20 @@ def viewer():
     """PathMe page."""
     pathways = process_request(request)
 
+    # List of all pathway names
+    pathway_names = []
+    for pathway_id, resource in pathways.items():
+        pathway = current_app.pathme_manager.get_pathway_by_id(pathway_id, resource)
+
+        if not pathway:
+            continue
+
+        pathway_names.append(pathway.display_name)
+
     return render_template(
         'pathme_viewer.html',
         pathways=pathways,
+        pathways_name='+'.join(pathway_names),
         pathway_ids=list(pathways.keys())
     )
 
@@ -120,7 +131,8 @@ def get_network():
 
     graph = merge_pathways(pathways)
 
-    log.info('Exporting merged graph with {} nodes and {} edges'.format(graph.number_of_nodes(), graph.number_of_edges()))
+    log.info(
+        'Exporting merged graph with {} nodes and {} edges'.format(graph.number_of_nodes(), graph.number_of_edges()))
 
     return export_graph(graph, request.args.get('format'))
 

@@ -4,12 +4,12 @@
 
 import datetime
 
-from pybel import from_bytes
 from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy import LargeBinary, Text
 from sqlalchemy.ext.declarative import declarative_base
 
-from .constants import MODULE_NAME
+from pybel import from_bytes
+from .constants import MODULE_NAME, DATABASE_STYLE_DICT
 
 LONGBLOB = 4294967295
 
@@ -43,8 +43,19 @@ class Pathway(Base):
     blob = Column(LargeBinary(LONGBLOB), doc='A pickled version of this pathway')
 
     def __str__(self):
-        """Return Pathway name."""
-        return self.name
+        """Return pathway name."""
+        return '{} ({})'.format(
+            self.name,
+            DATABASE_STYLE_DICT.get(self.resource_name, self.resource_name)
+        )
+
+    @property
+    def display_name(self):
+        """Return pathway name."""
+        return '{} ({})'.format(
+            self.name,
+            DATABASE_STYLE_DICT.get(self.resource_name, self.resource_name)
+        )
 
     def as_bel(self):
         """Get this network and loads it into a :class:`BELGraph`.

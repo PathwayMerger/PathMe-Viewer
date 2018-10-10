@@ -5,7 +5,13 @@
 import os
 
 from pathme.cli import WIKIPATHWAYS_FILES
-from pathme.constants import get_connection
+from pathme.constants import get_connection, KEGG, REACTOME, WIKIPATHWAYS
+
+DATABASE_STYLE_DICT = {
+    KEGG: 'KEGG',
+    REACTOME: 'Reactome',
+    WIKIPATHWAYS: 'WikiPathways',
+}
 
 MODULE_NAME = 'pathme_viewer'
 PATHME_DIR = os.environ.get('PATHME_DIRECTORY', os.path.join(os.path.expanduser('~'), '.pathme'))
