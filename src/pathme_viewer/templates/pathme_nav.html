@@ -14,6 +14,15 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Getting Started <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ url_for('pathme_viewer.about') }}">About</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">SCAI Resources <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-header"

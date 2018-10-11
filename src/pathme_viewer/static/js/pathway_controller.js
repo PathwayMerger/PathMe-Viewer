@@ -1533,7 +1533,7 @@ function initD3Force(graph, tree) {
             }
 
             $.ajax({
-                url: "/api/pathway/paths/",
+                url: "/api/pathway/paths",
                 type: pathForm.attr("method"),
                 dataType: "json",
                 data: $.param(args, true),
@@ -1696,7 +1696,7 @@ function initD3Force(graph, tree) {
             args["node_number"] = betwennessForm.find("input[name='betweenness']").val();
 
             $.ajax({
-                url: "/api/pathway/centrality/",
+                url: "/api/pathway/centrality",
                 type: betwennessForm.attr("method"),
                 dataType: "json",
                 data: $.param(args, true),

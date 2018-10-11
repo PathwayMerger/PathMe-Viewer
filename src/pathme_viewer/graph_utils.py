@@ -10,12 +10,22 @@ from pybel_tools.mutation.metadata import serialize_authors
 from pybel_tools.summary import relation_set_has_contradictions
 from six import BytesIO, StringIO
 
+from pathme_viewer.constants import PATHWAYS_ARGUMENT, RESOURCES_ARGUMENT
 from pybel import to_bel_lines, to_graphml, to_bytes, to_csv
 from pybel import union
 from pybel.constants import *
 from pybel.io import from_bytes
 from pybel.struct import add_annotation_value
 from pybel.struct.summary import get_annotation_values_by_annotation
+
+
+def throw_parameter_error(parameter):
+    """Return 500 error.
+
+    :param str parameter:
+    :return: HTTP error
+    """
+    abort(500, '"{}" argument is missing in the request'.format(parameter))
 
 
 def add_annotation_key(graph):
@@ -34,8 +44,14 @@ def process_request(request):
     :param flask.request request: http request
     :rtype: dict
     """
-    pathways_list = request.args.getlist('pathways[]')
-    resources_list = request.args.getlist('resources[]')
+    pathways_list = request.args.getlist(PATHWAYS_ARGUMENT)
+    resources_list = request.args.getlist(RESOURCES_ARGUMENT)
+
+    if not resources_list:
+        throw_parameter_error(RESOURCES_ARGUMENT)
+
+    if not pathways_list:
+        throw_parameter_error(PATHWAYS_ARGUMENT)
 
     return {
         pathway_id: resource

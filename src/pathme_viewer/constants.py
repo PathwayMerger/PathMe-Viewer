@@ -18,3 +18,9 @@ PATHME_DIR = os.environ.get('PATHME_DIRECTORY', os.path.join(os.path.expanduser(
 DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)
 
 HUMAN_WIKIPATHWAYS = os.path.join(WIKIPATHWAYS_FILES, 'wp', 'Human')
+
+PATHWAYS_ARGUMENT = 'pathways[]'
+RESOURCES_ARGUMENT = 'resources[]'
+UNDIRECTED = 'undirected'
+PATHS_METHOD = 'paths_method'
+RANDOM_PATH = 'random'
