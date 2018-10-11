@@ -6,27 +6,12 @@
     text-align: left;
 }
 
-.candidate_mechanism {
-    padding-left: 15px;
-    min-width: 300px;
-}
-
-.candidate_nodes {
-    padding-left: 15px;
-    min-width: 500px;
-    padding-right: 15px;
-}
-
 .min-padding-left {
     padding-left: 10px;
 }
 
 .normal {
     font-weight: normal;
-}
-
-.button-padding {
-    margin: 10px;
 }
 
 .svg-border {
@@ -100,12 +85,6 @@
 #bel-logo {
     height: 20px;
     width: 20px;
-    vertical-align: middle;
-}
-
-#json-logo {
-    height: 17px;
-    width: 17px;
     vertical-align: middle;
 }
 
@@ -224,6 +203,3 @@ circle {
 .Reaction {
     fill: #000000;
 }
-
-
-
