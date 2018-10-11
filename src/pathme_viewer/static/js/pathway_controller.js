@@ -612,89 +612,6 @@ function doesEdgeHaveCausal(edge) {
  */
 function initD3Force(graph, tree) {
 
-    /**
-     * Defines d3-context menu on right click
-     */
-    var nodeMenu = [
-        {
-            title: "Expand node",
-            action: function (elm, d) {
-                // Variables explanation:
-                // elm: [object SVGGElement] d: [object Object] i: (#Number)
-
-                var positions = savePreviousPositions();
-
-                // Push selected node to expand node list
-                window.expandNodes.push(d.id);
-                var args = getDefaultAjaxParameters(tree);
-
-                // Ajax to update the cypher query. Three list are sent to the server. pks of the subgraphs, list of nodes to delete and list of nodes to expand
-                $.ajax({
-                    url: "/api/pathway/",
-                    dataType: "json",
-                    data: $.param(args, true)
-                }).done(function (response) {
-
-                    // Load new data, first empty all created divs and clear the current network
-                    var data = updateNodePosition(response, positions);
-
-                    clearUsedDivs();
-
-                    initD3Force(data["json"], tree);
-
-                });
-            },
-            disabled: false // optional, defaults to false
-        },
-        {
-            title: "Delete node",
-            action: function (elm, d) {
-
-                var positions = savePreviousPositions();
-
-                // Push selected node to delete node list
-                window.deleteNodes.push(d.id);
-                var args = getDefaultAjaxParameters(tree);
-
-                $.ajax({
-                    url: "/api/pathway/",
-                    dataType: "json",
-                    data: $.param(args, true)
-                }).done(function (response) {
-
-                    // Load new data, first empty all created divs and clear the current network
-                    var data = updateNodePosition(response, positions);
-
-                    clearUsedDivs();
-
-                    initD3Force(data["json"], tree);
-
-                });
-
-            }
-        }
-    ];
-
-    // Definition of context menu for nodes
-    var edgeMenu = [
-        {
-            title: "Log evidences to console",
-            action: function (elm, d) {
-
-                console.log(d.source);
-                console.log(d.target);
-
-                $.ajax({
-                    url: "/api/edges/provenance/" + d.source.id + "/" + d.target.id,
-                    dataType: "json"
-                }).done(function (response) {
-                    console.log(response)
-                });
-            },
-            disabled: false // optional, defaults to false
-        }
-    ];
-
     //////////////////////////////
     // Main graph visualization //
     //////////////////////////////
@@ -1387,13 +1304,14 @@ function initD3Force(graph, tree) {
 
     // Check over duplicate cnames and create hashmap to id
     $.each(graph.nodes, function (key, value) {
+
         // if the node has no duplicate show it in autocompletion with its cname
         if (duplicates.indexOf(value.cname) < 0) {
-            nodeNamesToId[value.cname] = value.id;
+            nodeNamesToId[getCanonicalName(value)] = value.id;
         }
         // if it has a duplicate show also the function after the cname
         else {
-            nodeNamesToId[value.cname + ' (' + value.function + ')'] = value.id;
+            nodeNamesToId[getCanonicalName(value) + ' (' + value.function + ')'] = value.id;
         }
     });
 
