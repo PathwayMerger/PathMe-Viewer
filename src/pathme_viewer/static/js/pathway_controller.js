@@ -1786,259 +1786,46 @@ function initD3Force(graph, tree) {
     );
 
 
-    $("#get-candidate-mechanism").on("click", function (e) {
+    ///////////////////////
+    // Tool modal buttons /
+    ///////////////////////
 
-        e.stopPropagation();
+    // Hide node names button
 
-        var checkedItems = [];
-        $(".candidate-nodes-checkbox:checked").each(function (idx, li) {
-            // Get the ids of checkboxes and strips it to create an array with ids of the selected nodes
-            checkedItems.push(li.parentElement.childNodes[3].id.replace("node-", ""));
-        });
+    var hideNodeNames = $("#hide-node-names");
 
-        var args = getDefaultAjaxParameters(tree);
-        args["candidate_nodes"] = checkedItems;
-        args["mapped_nodes"] = mapped_nodes.toSource();
-
-        // Ajax call
-        $.ajax({
-            url: '/graph/mechanisms/',
-            type: 'GET',
-            dataType: 'json',
-            data: $.param(args, true),
-            success: function (data) {
-
-                var mechanism_paths = data['mechanism_paths'];
-                var mechanism_story = data['story_mechanism_dict'];
-                var json_sankey = JSON.parse(data['json_sankey']);
-
-                // Sankey //
-
-                $('#sankey').empty();  // Empty Sankey's div
-
-                if (json_sankey.links.length === 0) {
-                    d3.select("#sankey").append("p").text("No paths between the selected node and the input")
-                }
-                else {
-                    renderSankeyDiagram(json_sankey); // Init sankey diagram with all paths from node a to b
-
-                }
-                // Sankey //
-
-                // Erase stuffs if already a mechanism has been clicked
-                $("#mechanism-list").html("");
-
-                $.each(mechanism_story, function (key, value_array) {
-                    $("#mechanism-list").append("<li class='dropdown-submenu candidate_mechanism'><a>" + key +
-                        "</a><ul class='dropdown-menu no-bullets min-padding-left candidate_mechanism'><li>" + value_array + "</li></ul></li>");
-                });
-
-                resetAttributes();
-
-                hideNodesTextInPaths(mechanism_paths, false, 'id');
-
-                // true to hide all other paths
-                colorPaths(mechanism_paths, false);
-
-                resetAttributesDoubleClick();
-            },
-            error: function (request) {
-                alert(request.responseText);
-            }
-        });
-    });
-
-    // Highlight all nodes
-    $("#get-mapped-nodes").on("click", function () {
-        var mapped_nodes = flattenObject(window.mapped_nodes).map(function (x) {
-            return parseInt(x);
-        });
-
-        highlightNodes(mapped_nodes, 'id');
-        resetAttributesDoubleClick();
-    });
-
+    hideNodeNames.off("click"); // It will unbind the previous click if multiple graphs has been rendered
 
     // Hide text in graph
-    $("#hide_node_names").on("click", function () {
+    hideNodeNames.on("click", function () {
         svg.selectAll(".node-name").style("display", "none");
     });
 
+    var restoreNodeNames = $("#restore-node-names");
+
+    restoreNodeNames.off("click"); // It will unbind the previous click if multiple graphs has been rendered
+
     // Hide text in graph
-    $("#restore_node_names").on("click", function () {
+    restoreNodeNames.on("click", function () {
         svg.selectAll(".node-name").style("display", "block");
     });
 
-    // Hide text in graph
-    $("#restore").on("click", function () {
+    var restoreAll = $("#restore");
+
+    restoreAll.off("click"); // It will unbind the previous click if multiple graphs has been rendered
+
+    // Restore all
+    restoreAll.on("click", function () {
         resetAttributes();
     });
-}
 
+    var removeNodeHighlighting = $("#remove-node-highlighting");
 
-/**
- * Renders sankey representation given paths
- * @param {object} graph
- */
-function renderSankeyDiagram(graph) {
+    removeNodeHighlighting.off("click"); // It will unbind the previous click if multiple graphs has been rendered
 
-    // Adjust the height depending on the number of links in the diagram
-    if (graph.links.length < 10) {
-        heighFactor = 0.5;
-    }
-    else if (graph.links.length > 10 && graph.links.length <= 30) {
-        heighFactor = 0.7;
-    }
-    else if (graph.links.length > 30 && graph.links.length <= 50) {
-        heighFactor = 0.9;
-    }
-    else if (graph.links.length > 50 && graph.links.length <= 70) {
-        heighFactor = 1.1;
-    }
-    else if (graph.links.length > 70 && graph.links.length <= 90) {
-        heighFactor = 1.3;
-    }
-    else if (graph.links.length > 90 && graph.links.length <= 130) {
-        heighFactor = 2;
-    }
-    else {
-        alert('Sankey diagram may crash due to the huge amount of paths requested and will not be displayed');
-        return;
-    }
-
-    // Size
-    d = document;
-    e = d.documentElement;
-    g = d.getElementsByTagName('body')[0];
-
-    var margin = {top: 10, bottom: 10, left: 10, right: 10};
-
-    // Graph uses 0.85 x 0.85 of the window size
-    var w = $('#force-panel').width(), h = 0.72 * w.innerHeight ||
-        0.72 * e.clientHeight || 0.72 * g.clientHeight;
-
-    var units = "Widgets";
-
-    // format variables
-    var formatNumber = d3.format(",.0f"),    // zero decimal places
-        format = function (d) {
-            return formatNumber(d) + " " + units;
-        };
-    // append the svg object to the body of the page
-    var svg = d3.select("#sankey").append("svg")
-        .attr("width", w + margin.left + margin.right)
-        .attr("height", h + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-
-    // Set the sankey diagram properties
-    var sankey = d3.sankey()
-        .nodeWidth(36)
-        .nodePadding(40)
-        .size([w, h]);
-
-    var path = sankey.link();
-
-    sankey
-        .nodes(graph.nodes)
-        .links(graph.links)
-        .layout(32);
-
-    // add in the links
-    var link = svg.append("g").selectAll(".link")
-        .data(graph.links)
-        .enter().append("path")
-        .attr("class", function (d) {
-            return (d.causesCycle ? "cycleLink" : "link sankey_link")
-        })
-        .on("contextmenu", d3.contextMenu(sankeyEdgeMenu)) // Attach context menu to sankey edge
-        .attr("d", path).sort(function (a, b) {
-            return b.dy - a.dy;
-        });
-
-    link.filter(function (d) {
-        return !d.causesCycle
-    }).style("stroke-width", function (d) {
-        return Math.max(1, d.dy);
+    // Restore all
+    removeNodeHighlighting.on("click", function () {
+        removeHighlightNodeBorder();
     });
 
-    // add the link titles
-    link.append("title")
-        .text(function (d) {
-            return d.source.name + " → " +
-                d.target.name + "\n" + format(d.value);
-        });
-
-    // add in the nodes
-    var node = svg.append("g").selectAll(".node")
-        .data(graph.nodes)
-        .enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function (d) {
-            return "translate(" + d.x + "," + d.y + ")";
-        })
-        .call(d3.drag()
-            .subject(function (d) {
-                return d;
-            })
-            .on("start", function () {
-                this.parentNode.appendChild(this);
-            })
-            .on("drag", dragmove));
-
-    // add the rectangles for the nodes
-    node.append("rect")
-        .attr("height", function (d) {
-            return d.dy;
-        })
-        .attr("width", sankey.nodeWidth())
-        .style("fill", function (d) {
-            return d.color = color(d.name.replace(/ .*/, ""));
-        })
-        .style("stroke", function (d) {
-            return d3.rgb(d.color).darker(2);
-        })
-        .append("title")
-        .text(function (d) {
-            return d.name + "\n" + format(d.value);
-        });
-
-    // Add in the title for the nodes
-    node.append("text")
-        .attr("x", -6)
-        .attr("y", function (d) {
-            return d.dy / 2;
-        })
-        .attr("dy", ".35em")
-        .attr("text-anchor", "end")
-        .attr("transform", null)
-        .text(function (d) {
-            return d.name;
-        })
-        .filter(function (d) {
-            return d.x < w / 2;
-        })
-        .attr("x", 6 + sankey.nodeWidth())
-        .attr("text-anchor", "start");
-
-    // the function for moving the nodes
-    function dragmove(d) {
-        d3.select(this).attr("transform",
-            "translate(" + (
-                d.x = Math.max(0, Math.min(w - d.dx, d3.event.x))
-            ) + "," + (
-                d.y = Math.max(0, Math.min(h - d.dy, d3.event.y))
-            ) + ")");
-        sankey.relayout();
-        link.attr("d", path);
-    }
-
-    // Calculate number of cycles http://bl.ocks.org/cfergus/3956043
-    var numCycles = 0;
-    for (var i = 0; i < sankey.links().length; i++) {
-        if (sankey.links()[i].causesCycle) {
-            numCycles++;
-        }
-    }
 }
