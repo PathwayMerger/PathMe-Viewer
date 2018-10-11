@@ -364,7 +364,6 @@ function insertRow(table, row, column1, column2) {
 }
 
 
-
 $(document).ready(function () {
 
     //Initialize toggle button
@@ -1646,6 +1645,31 @@ function initD3Force(graph, tree) {
             $(this).toggle(showCurrentLi);
         }
     });
+
+    /// Random Paths ////
+
+    var randomPaths = $("#random-paths");
+
+    randomPaths.off("click"); // It will unbind the previous click if multiple graphs has been rendered
+
+    randomPaths.on("click", function () {
+
+            var args = getDefaultAjaxParameters(tree);
+
+            $.ajax({
+                url: "/api/pathway/paths/random",
+                dataType: "json",
+                data: $.param(args, true),
+                success: function (paths) {
+                    handlePathResponse(paths, false, null);
+                },
+                error: function (request) {
+                    alert(request.responseText);
+                }
+            })
+        }
+    );
+
 
     var highlightButton = $("#highlight-button");
     highlightButton.off("click"); // It will unbind the previous click if multiple graphs has been rendered
