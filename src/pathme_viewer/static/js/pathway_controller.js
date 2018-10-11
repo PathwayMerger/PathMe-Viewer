@@ -5,7 +5,7 @@
  *
  * @summary   Network controller of NeuroMMSig explorer
  *
- * @requires jquery, d3, d3-context-menu, inspire-tree, blob
+ * @requires jquery, d3, inspire-tree, blob
  *
  */
 
@@ -364,33 +364,11 @@ function insertRow(table, row, column1, column2) {
 }
 
 
-/**
- * Highlights border of nodes in nodeArray
- * @param {array} nodeArray
- */
-function highlightNodeBorder(nodeArray) {
-
-    var highlightNodes = d3.select("#graph-chart").selectAll(".node").filter(function (el) {
-        return nodeArray.indexOf(el.id) >= 0;
-    });
-
-    if (highlightNodes["_groups"][0].length > 0) {
-        $.each(highlightNodes["_groups"][0], function (index, value) {
-            // Removes the fill - > black attribute
-            value.children[1].setAttribute('fill', 'red');
-            // Uses a different attribute rather than fill because fill it is modified when mouse over
-            value.children[1].setAttribute('stroke', 'red');
-
-        });
-    }
-}
-
 
 $(document).ready(function () {
 
     //Initialize toggle button
     $('#tree-toggle').bootstrapToggle();
-
 
     // Initiate the tree and expands it with the annotations given pks of subgraphs
     var tree = new InspireTree({
@@ -445,29 +423,6 @@ $(document).ready(function () {
         var args = getDefaultAjaxParameters(tree);
         args["format"] = $(this).data('format');
         window.location.href = "/api/pathway/?" + $.param(args, true);
-    });
-
-    // Reset expand/node window globals
-    $("#reset_globals").on("click", function () {
-        window.expandNodes = [];
-        window.deleteNodes = [];
-    });
-
-    // Update candidate mechanism dropdown
-    $("#candidate-search").on("keyup", function () {
-
-        // Get value from search form (fixing spaces and case insensitive
-        var searchText = $(this).val();
-        searchText = searchText.toLowerCase();
-        searchText = searchText.replace(/\s+/g, '');
-
-        $.each($('.candidate-nodes'), dropdown_update);
-
-        function dropdown_update() {
-            var currentLiText = $(this).find("span")[0].innerHTML,
-                showCurrentLi = ((currentLiText.toLowerCase()).replace(/\s+/g, '')).indexOf(searchText) !== -1;
-            $(this).toggle(showCurrentLi);
-        }
     });
 
     // Controls behaviour of clicking in dropdowns
@@ -947,7 +902,6 @@ function initD3Force(graph, tree) {
         .style("stroke-width", edgeStroke)
         .style("stroke-opacity", 0.4)
         .on("click", displayEdgeInfo)
-        .on("contextmenu", d3.contextMenu(edgeMenu)) // Attach context menu to edge link
         .attr("class", function (edge) {
             if (doesEdgeHaveCausal(edge)) {
                 return "link link_continuous";
@@ -998,8 +952,6 @@ function initD3Force(graph, tree) {
         .on("click", function (d) {
             displayNodeInfo(d);
         })
-        // context-menu on right click
-        .on("contextmenu", d3.contextMenu(nodeMenu)) // Attach context menu to node"s circle
         // Dragging
         .call(nodeDrag);
 
@@ -1588,18 +1540,6 @@ function initD3Force(graph, tree) {
                 success: function (paths) {
 
                     if (args["paths_method"] === "all") {
-
-                        var json_sankey = JSON.parse(paths['json_sankey']);
-
-                        // Empty sankey's div
-                        $('#sankey').empty();
-
-                        if (paths["paths"].length === 0) {
-                            d3.select("#sankey").append("p").text("No paths between the nodes");
-                        }
-
-                        // Init sankey diagram with all paths from node a to b
-                        renderSankeyDiagram(json_sankey);
 
                         resetAttributes();
 
