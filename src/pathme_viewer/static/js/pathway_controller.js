@@ -200,11 +200,10 @@ function displayNodeInfo(node) {
 
     var nodeObject = {};
 
-    if (node.cname) {
-        nodeObject["Node"] = node.cname + " (ID: " + node.id.substring(0, 9) + ")";
-    }
+    nodeObject["Node"] = node.bel;
+
     if (node.name) {
-        nodeObject["Name"] = node.cname;
+        nodeObject["Name"] = getCanonicalName(node);
     }
     if (node.function) {
         nodeObject["Function"] = node.function;
@@ -226,6 +225,7 @@ function displayNodeInfo(node) {
     });
 }
 
+
 /**
  * Renders edge info table
  * @param {object} edge object
@@ -234,37 +234,54 @@ function displayEdgeInfo(edge) {
 
     var edgeObject = {};
 
+    if (edge.contexts) {
+        $.each(edge.contexts, function (key, context) {
+
+                edgeObject[key] = '<dl class="dl-horizontal">';
+                edgeObject[key] += '<dt>BEL</dt><dd><code>' + context.bel + '</code></dd>';
+
+                if (context.citation) {
+                    edgeObject[key] += '<dt>Citation</dt><dd>';
+                    if (context.citation.type === "PubMed") {
+                        edgeObject[key] += '<a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/' + context.citation.reference + '" style="text-decoration: underline">PMID:' + context.citation.reference + ' <span class="glyphicon glyphicon-new-window"></a> </span></a>';
+                    } else if (context.citation.type === "URL") {
+                        edgeObject[key] += '<a target="_blank" href=' + context.citation.reference + " target='_blank' " +
+                            "style='text-decoration: underline'>" + context.citation.reference + "</a>";
+                    } else {
+                        edgeObject[key] += context.citation.reference;
+                    }
+
+                    edgeObject[key] += '</dd>';
+                }
+
+                if (context.evidence) {
+                    edgeObject[key] += '<dt>Support</dt><dd>' + context.evidence + "</dd>";
+                }
+
+                if (context.annotations && Object.keys(context.annotations).length > 0) {
+                    $.each(context.annotations, function (annotation_key, annotation_values) {
+                        $.each(annotation_values, function (annotation_value) {
+                            edgeObject[key] += '<dt>' + annotation_key + '</dt><dd>' + annotation_value + '</dd>';
+                        });
+                    });
+                }
+
+                edgeObject[key] += '</dl>';
+            }
+        );
+    }
+
     var dynamicTable = document.getElementById('info-table');
 
     while (dynamicTable.rows.length > 0) {
         dynamicTable.deleteRow(0);
     }
 
-    // Check if object property exists
-
-    if (edge.evidence) {
-        edgeObject["Evidence"] = edge.evidence;
-    }
-    if (edge.citation) {
-        edgeObject["Citation"] = "<a href=https://www.ncbi.nlm.nih.gov/pubmed/" + edge.citation.reference + " target='_blank' " +
-            "style='color: blue; text-decoration: underline'>" + edge.citation.reference + "</a>";
-    }
-    if (edge.relation) {
-        edgeObject["Relationship"] = edge.relation;
-    }
-    if (edge.annotations) {
-        edgeObject["Annotations"] = JSON.stringify(edge.annotations);
-    }
-    if (edge.source.cname) {
-        edgeObject["Source"] = '<a href="/api/node/' + edge.source.id + '">' + edge.source.id.substring(0, 9) + "</a>"
-    }
-    if (edge.target.cname) {
-        edgeObject["Target"] = '<a href="/api/node/' + edge.target.id + '">' + edge.target.id.substring(0, 9) + "</a>"
-    }
-
     var row = 0;
-    $.each(edgeObject, function (key, value) {
-        insertRow(dynamicTable, row, key, value);
+    $.each(edgeObject, function (sk, column1) {
+        var row = dynamicTable.insertRow(row);
+        var cell1 = row.insertCell(0);
+        cell1.innerHTML = column1;
         row++
     });
 }
