@@ -37,11 +37,11 @@ RUN 7z x /home/pathme/.pathme/kegg/bel/bel.zip -o/home/pathme/.pathme/kegg/bel/
 
 # Download Reactome pickles (Update link if the file is replaced)
 ADD https://owncloud.scai.fraunhofer.de/index.php/s/dfSdkjAizqgqoj7/download /home/pathme/.pathme/reactome/bel/bel.zip
-RUN 7z x /home/pathme/.pathme/reactome/bel/bel.zip -o/home/pathme/.pathme/kegg/bel/
+RUN 7z x /home/pathme/.pathme/reactome/bel/bel.zip -o/home/pathme/.pathme/reactome/bel/
 
 # Download WikiPathways pickles (Update link if the file is replaced)
 ADD https://drive.google.com/uc?authuser=0&id=1Gn5CBtwwgCv-pLb7eDd5NNPfGWtuOapd&export=download /home/pathme/.pathme/wikipathways/bel/bel.zip
-RUN 7z x /home/pathme/.pathme/wikipathways/bel/bel.zip -o/home/pathme/.pathme/kegg/bel/
+RUN 7z x /home/pathme/.pathme/wikipathways/bel/bel.zip -o/home/pathme/.wikipathways/kegg/bel/
 
 # Remove downloaded files
 RUN rm /home/pathme/.pathme/kegg/bel/bel.zip && rm /home/pathme/.pathme/reactome/bel/bel.zip && rm /home/pathme/.pathme/wikipathways/bel/bel.zip
