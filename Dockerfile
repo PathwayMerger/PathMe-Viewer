@@ -31,5 +31,7 @@ ENV PATH="/home/pathme_viewer/.local/bin:$PATH"
 # User 
 USER pathme
 
+EXPOSE 5000
+
 ENTRYPOINT ["/opt/pathme_viewer/src/bin/bootstrap.sh"]
 #CMD ["tail", "-f", "/proc/meminfo"]

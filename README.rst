@@ -62,11 +62,11 @@ Deployment of ComPath with Docker
 
     docker build -t pathme:0.0.1 .
 
-2. Run docker the pathme container verison 0.0.1.
+2. Run docker the pathme container version 0.0.1.
 
 .. code::
 
-    docker run --name=compath -d -p 0.0.0.0:5000 --restart=always -d pathme:0.0.1
+    docker run --name=compath -d -p 5000:5000 --restart=always -d pathme:0.0.1
 
 
 How to Use
