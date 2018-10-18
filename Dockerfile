@@ -7,7 +7,7 @@ RUN apt-get -y upgrade && apt-get -y install vim p7zip-full
 RUN mkdir /home/pathme_viewer /data /data/logs /home/pathme /home/pathme/.pathme
 
 # Create databases folders (user has no permission to do so)
-RUN mkdir /home/pathme/.pathme/kegg /home/pathme/.pathme/kegg/cache /home/pathme/.pathme/kegg/xml home/pathme/.pathme/kegg/bel
+RUN mkdir /home/pathme/.pathme/kegg /home/pathme/.pathme/kegg/cache /home/pathme/.pathme/kegg/xml /home/pathme/.pathme/kegg/bel/
 RUN mkdir /home/pathme/.pathme/reactome /home/pathme/.pathme/reactome/rdf /home/pathme/.pathme/reactome/bel
 RUN mkdir /home/pathme/.pathme/wikipathways /home/pathme/.pathme/wikipathways/rdf /home/pathme/.pathme/wikipathways/bel
 
@@ -41,7 +41,7 @@ RUN 7z x /home/pathme/.pathme/reactome/bel/bel.zip -o/home/pathme/.pathme/reacto
 
 # Download WikiPathways pickles (Update link if the file is replaced)
 ADD https://drive.google.com/uc?authuser=0&id=1Gn5CBtwwgCv-pLb7eDd5NNPfGWtuOapd&export=download /home/pathme/.pathme/wikipathways/bel/bel.zip
-RUN 7z x /home/pathme/.pathme/wikipathways/bel/bel.zip -o/home/pathme/.wikipathways/kegg/bel/
+RUN 7z x /home/pathme/.pathme/wikipathways/bel/bel.zip -o/home/pathme/.pathme/wikipathways/bel/
 
 # Remove downloaded files
 RUN rm /home/pathme/.pathme/kegg/bel/bel.zip && rm /home/pathme/.pathme/reactome/bel/bel.zip && rm /home/pathme/.pathme/wikipathways/bel/bel.zip
