@@ -66,7 +66,7 @@ Deployment of ComPath with Docker
 
 .. code::
 
-    docker run --name=compath -d -p 5000:5000 --restart=always -d pathme:0.0.1
+    docker run --name=pathme -d -p 5000:5000 --restart=always -d pathme:0.0.1
 
 
 How to Use
