@@ -18,13 +18,12 @@ shut_down() {
 
 trap 'shut_down' SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
-#python -m compath web --host 0.0.0.0 --port 5000 --template-folder="/opt/compath/src/compath/templates" --static-folder="/opt/compath/src/compath/static" >> /data/logs/compath.log 2>&1
-python -m compath web --host 0.0.0.0 --port 5000 --connection="sqlite:////data/bio2bel.db" --template-folder="/opt/compath/src/compath/templates" --static-folder="/opt/compath/src/compath/static" >> /data/logs/compath.log 2>&1
+python -m pathme_viewer web --host 0.0.0.0 --port 5000 --template="/opt/pathme_viewer/src/compath/templates" --static="/opt/pathme_viewer/src/compath/static" >> /data/logs/pathme.log 2>&1
 
 # this script must end with a persistent foreground process
 # exec a command
 # wait forever
 while true
 do
-	tail -f /data/logs/compath.log & wait ${!}
+	tail -f /data/logs/pathme.log & wait ${!}
 done
