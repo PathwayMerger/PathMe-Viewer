@@ -110,7 +110,8 @@ def drop(debug, yes, connection):
 @click.option('-rp', '--reactome_path', help='Reactome data folder. Defaults to {}'.format(REACTOME_DIR))
 @click.option('-wp', '--wikipathways_path', help='WikiPathways data folder. Defaults to {}'.format(WIKIPATHWAYS_DIR))
 @click.option('-f', '--flatten', help='Flat complexes/composites. Defaults to False')
-def load(connection, kegg_path, reactome_path, wikipathways_path, flatten):
+@click.option('-y', '--yes', help='Skip confirmation', is_flag=True)
+def load(connection, kegg_path, reactome_path, wikipathways_path, flatten, yes):
     """Loads databases into PathMe DB."""
     manager = Manager.from_connection(connection=connection)
 
@@ -123,7 +124,7 @@ def load(connection, kegg_path, reactome_path, wikipathways_path, flatten):
     """Load KEGG"""
 
     # User must agree to KEGG License
-    if click.confirm(
+    if yes or click.confirm(
             'You are about to download KGML files from KEGG.\n'
             'Please make sure you have read KEGG license (see: https://www.kegg.jp/kegg/rest/).'
             ' These files cannot be distributed and their use must be exclusively academic.\n'
