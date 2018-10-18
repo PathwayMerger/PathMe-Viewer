@@ -53,6 +53,22 @@ Once the desired pathway databases are loaded, you can deploy the web applicatio
 Note that the database runs by default in the following port: http://0.0.0.0:5000/. The Flask host and port can be
 modified by changing the default parameters (run: "python3 -m pathme_viewer web --help" for more info).
 
+Deployment of ComPath with Docker
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Build the container named 'pathme' version 0.0.1.
+
+.. code-block:: sh
+
+    docker build -t pathme:0.0.1 .
+
+2. Run docker the pathme container verison 0.0.1.
+
+.. code::
+
+    docker run --name=compath -d -p 0.0.0.0:5000 --restart=always -d pathme:0.0.1
+
+
 How to Use
 ----------
 
