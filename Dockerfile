@@ -52,6 +52,7 @@ RUN pip3 install .
 # Add --user python modules to PATH
 ENV PATH="/home/pathme_viewer/.local/bin:$PATH"
 
+# TODO: Change me in order to export a port
 EXPOSE 5000
 
 USER pathme

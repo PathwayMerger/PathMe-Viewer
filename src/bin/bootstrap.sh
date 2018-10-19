@@ -19,7 +19,7 @@ shut_down() {
 trap 'shut_down' SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
 
-# Delorean
+# TODO: Change port to be the same as server
 #python -m pathme_viewer web --host=30500 --port 5000 --template="/opt/pathme_viewer/src/pathme_viewer/templates" --static="/opt/pathme_viewer/src/pathme_viewer/static" >> /data/logs/pathme.log 2>&1
 
 python -m pathme_viewer web --host=0.0.0.0 --port 5000 --template="/opt/pathme_viewer/src/pathme_viewer/templates" --static="/opt/pathme_viewer/src/pathme_viewer/static" >> /data/logs/pathme.log 2>&1
