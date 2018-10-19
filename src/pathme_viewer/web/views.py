@@ -79,7 +79,7 @@ class PathwayView(ModelView):
 @redirect.route('/')
 def home():
     """Redirect to PathMe page. Only used when PathMe is run independent from ComPath."""
-    return render_template('pathme.html')
+    return render_template('home.html')
 
 
 """Views"""
@@ -88,7 +88,7 @@ def home():
 @pathme.route('/pathme')
 def home():
     """PathMe home page."""
-    return render_template('pathme.html')
+    return render_template('home.html')
 
 
 @pathme.route('/pathme/about')
