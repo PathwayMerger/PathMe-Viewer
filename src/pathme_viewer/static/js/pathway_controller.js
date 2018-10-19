@@ -585,6 +585,26 @@ function getPathwayAnnotations(edge) {
     return pathwayAnnotations;
 }
 
+/**
+ * Gets edge contradiction annotations as a dictionary
+ * @param {object} edge json data
+ * @return {object}
+ */
+function getContradictionAnnotations(edge) {
+    var contradictionAnnotations = {};
+
+    $(edge.contexts).each(function (index, context) {
+
+        if ("annotations" in context && "Interesting edge" in context.annotations) {
+            for (var interesting in context.annotations["Interesting edge"]) {
+                contradictionAnnotations[interesting] = true;
+            }
+        }
+    });
+
+    return contradictionAnnotations;
+}
+
 
 /**
  * Checks if there are any causal edges
@@ -819,19 +839,19 @@ function initD3Force(graph, tree) {
         .style("stroke-opacity", 0.4)
         .on("click", displayEdgeInfo)
         .attr("class", function (edge) {
-            if (doesEdgeHaveCausal(edge)) {
-                return "link link_continuous";
-            }
 
             edgeTypes = getEdgeTypes(edge);
 
+            interestingAnnotations = getContradictionAnnotations(edge);
+
             // Highlight interesting edges
-            if (edge.contexts) {
-                $.each(edge.contexts, function (key, context) {
-                    if (context.annotations && Object.keys(context.annotations).includes("Interesting edge")) {
-                        return 'link link_continuous link_red';
-                    }
-                })
+            if (interestingAnnotations && ("Contradicts" in interestingAnnotations || "May contradict" in interestingAnnotations)) {
+                return 'link link_continuous link_red';
+            }
+
+            // Highlight causal edge
+            if (doesEdgeHaveCausal(edge)) {
+                return "link link_continuous";
             }
 
             // Highlight negative correlations and positive correlations
