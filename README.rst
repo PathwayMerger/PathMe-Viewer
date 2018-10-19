@@ -55,6 +55,8 @@ modified by changing the default parameters (run: "python3 -m pathme_viewer web 
 
 Deployment of ComPath with Docker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Note: the docker file is meant to be run on 0.0.0.0:5000. If you want to change the host/port
+please modify dockerfile (line 55) and src/bin/bootstrap.sh (line 23).
 
 1. Build the container named 'pathme' version 0.0.1.
 
