@@ -29,6 +29,7 @@ RUN chown -R pathme /opt/pathme_viewer && chgrp -R pathme /opt/pathme_viewer && 
 RUN chown -R pathme /home/pathme/.pathme/ && chgrp pathme -R /home/pathme/.pathme/ && chmod +x /home/pathme/.pathme/*
 RUN chown -R pathme /data && chgrp -R pathme /data
 
+# How to Zip a file: Go inside the folder "bel" make sure there are only pickles and run-> zip -r bel.zip . -x ".*" -x "__MACOSX"
 # TODO: When zipping files in macOS: https://apple.stackexchange.com/questions/239578/compress-without-ds-store-and-macosx
 
 # Download KEGG pickles (Update link if the file is replaced)
