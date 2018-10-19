@@ -126,10 +126,9 @@ def viewer():
         'pathme_viewer.html',
         pathways=pathways,
         pathways_name='+'.join(
-            '{}<div class="circle {}"></div>'.format(pathway_name, pathway_id)
+            '{}<div class="circle" id="{}"></div>'.format(pathway_name, pathway_id)
             for pathway_name, pathway_id in pathway_names.items()),
         pathway_ids=list(pathways.keys()),
-        pathway_id_to_name=pathway_id_to_name
     )
 
 

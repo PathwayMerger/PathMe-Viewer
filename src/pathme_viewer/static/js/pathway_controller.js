@@ -1430,8 +1430,8 @@ function initD3Force(graph, tree) {
         .attr('opacity', 0.2);
 
     // Color legend
-    $.each(subgraphToColor, function (index, value) {
-        pathwayIds2Name[""] = '';
+    $.each(subgraphToColor, function (pathwayId, color) {
+        $('#' + pathwayId).css({"background":color});
     });
 
     // add interaction to the groups
