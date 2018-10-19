@@ -825,6 +825,16 @@ function initD3Force(graph, tree) {
 
             edgeTypes = getEdgeTypes(edge);
 
+            // Highlight interesting edges
+            if (edge.contexts) {
+                $.each(edge.contexts, function (key, context) {
+                    if (context.annotations && Object.keys(context.annotations).includes("Interesting edge")) {
+                        return 'link link_continuous link_red';
+                    }
+                })
+            }
+
+            // Highlight negative correlations and positive correlations
             if ('negativeCorrelation' in edgeTypes) {
                 return 'link link_dashed link_red';
             }
