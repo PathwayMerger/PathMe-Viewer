@@ -18,11 +18,11 @@ from flask import (
 from flask_admin.contrib.sqla import ModelView
 from networkx import NetworkXNoPath, all_simple_paths, betweenness_centrality, shortest_path
 from pkg_resources import resource_filename
+from pybel.struct import get_random_path
 
 from pathme_viewer.constants import PATHS_METHOD, RANDOM_PATH, UNDIRECTED
 from pathme_viewer.graph_utils import export_graph, merge_pathways, get_tree_annotations, process_request
 from pathme_viewer.models import Pathway
-from pybel.struct import get_random_path
 
 log = logging.getLogger(__name__)
 time_instantiated = str(datetime.datetime.now())
@@ -111,20 +111,25 @@ def viewer():
     pathways = process_request(request)
 
     # List of all pathway names
-    pathway_names = []
+    pathway_names = {}
+    pathway_id_to_name = {}
     for pathway_id, resource in pathways.items():
         pathway = current_app.pathme_manager.get_pathway_by_id(pathway_id, resource)
 
         if not pathway:
             continue
 
-        pathway_names.append(pathway.display_name)
+        pathway_id_to_name[pathway_id] = pathway.display_name
+        pathway_names[pathway.display_name] = pathway_id
 
     return render_template(
         'pathme_viewer.html',
         pathways=pathways,
-        pathways_name='+'.join(pathway_names),
-        pathway_ids=list(pathways.keys())
+        pathways_name='+'.join(
+            '{}<div class="circle {}"></div>'.format(pathway_name, pathway_id)
+            for pathway_name, pathway_id in pathway_names.items()),
+        pathway_ids=list(pathways.keys()),
+        pathway_id_to_name=pathway_id_to_name
     )
 
 

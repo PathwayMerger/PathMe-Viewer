@@ -1405,7 +1405,11 @@ function initD3Force(graph, tree) {
         }
     });
 
+    // Subgraph names array
     subgraphs = Object.keys(subgraphsToNodes);
+
+    // Subgraph to Color Object
+    subgraphToColor = {};
 
     var paths = groups.selectAll('.path_placeholder')
         .data(subgraphs, function (d) {
@@ -1416,12 +1420,19 @@ function initD3Force(graph, tree) {
         .attr('class', 'path_placeholder')
         .append('path')
         .attr('stroke', function (d) {
+            // Fill up the subgraphToColor object
+            subgraphToColor[d] = color(d);
             return color(d);
         })
         .attr('fill', function (d) {
             return color(d);
         })
         .attr('opacity', 0.2);
+
+    // Color legend
+    $.each(subgraphToColor, function (index, value) {
+        pathwayIds2Name[""] = '';
+    });
 
     // add interaction to the groups
     groups.selectAll('.path_placeholder')
@@ -1430,7 +1441,6 @@ function initD3Force(graph, tree) {
             .on('drag', groupDragged)
             .on('end', groupDragEnded)
         );
-
 
     function zoomed() {
         //Transform svg and update convex hull
