@@ -19,9 +19,17 @@ from flask_admin.contrib.sqla import ModelView
 from networkx import NetworkXNoPath, all_simple_paths, betweenness_centrality, shortest_path
 from pkg_resources import resource_filename
 from pybel.struct import get_random_path
+from pybel.struct.mutation.collapse import collapse_to_genes
+from pybel_tools.selection import get_subgraph_by_annotations
 
-from pathme_viewer.constants import PATHS_METHOD, RANDOM_PATH, UNDIRECTED
-from pathme_viewer.graph_utils import export_graph, merge_pathways, get_tree_annotations, process_request
+from pathme_viewer.constants import COLLAPSE_TO_GENES, PATHS_METHOD, RANDOM_PATH, UNDIRECTED
+from pathme_viewer.graph_utils import (
+    export_graph,
+    get_annotations_from_request,
+    get_tree_annotations,
+    merge_pathways,
+    process_request
+)
 from pathme_viewer.models import Pathway
 
 log = logging.getLogger(__name__)
@@ -139,8 +147,17 @@ def get_network():
 
     graph = merge_pathways(pathways)
 
+    annotations = get_annotations_from_request(request)
+
+    if annotations:
+        graph = get_subgraph_by_annotations(graph, annotations)
+
+    if COLLAPSE_TO_GENES in request.args:
+        collapse_to_genes(graph)
+
     log.info(
-        'Exporting merged graph with {} nodes and {} edges'.format(graph.number_of_nodes(), graph.number_of_edges()))
+        'Exporting merged graph with {} nodes and {} edges'.format(graph.number_of_nodes(), graph.number_of_edges())
+    )
 
     return export_graph(graph, request.args.get('format'))
 
@@ -151,6 +168,14 @@ def get_network_tree():
     pathways = process_request(request)
 
     graph = merge_pathways(pathways)
+
+    annotations = get_annotations_from_request(request)
+
+    if annotations:
+        graph = get_subgraph_by_annotations(graph, annotations)
+
+    if COLLAPSE_TO_GENES in request.args:
+        collapse_to_genes(graph)
 
     # Returns annotation in graph
     return jsonify(get_tree_annotations(graph))

@@ -24,3 +24,13 @@ RESOURCES_ARGUMENT = 'resources[]'
 UNDIRECTED = 'undirected'
 PATHS_METHOD = 'paths_method'
 RANDOM_PATH = 'random'
+COLLAPSE_TO_GENES = 'collapse_to_genes'
+
+BLACK_LIST = {
+    COLLAPSE_TO_GENES,
+    PATHWAYS_ARGUMENT,
+    RESOURCES_ARGUMENT,
+    UNDIRECTED,
+    PATHS_METHOD,
+    RANDOM_PATH,
+}

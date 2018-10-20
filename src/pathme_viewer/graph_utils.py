@@ -2,6 +2,7 @@
 
 """This module contains the methods used to deal with BELGraphs."""
 
+from collections import defaultdict
 from operator import methodcaller
 
 from flask import abort, Response, jsonify, send_file
@@ -10,7 +11,7 @@ from pybel_tools.mutation.metadata import serialize_authors
 from pybel_tools.summary import relation_set_has_contradictions
 from six import BytesIO, StringIO
 
-from pathme_viewer.constants import PATHWAYS_ARGUMENT, RESOURCES_ARGUMENT
+from pathme_viewer.constants import BLACK_LIST, PATHWAYS_ARGUMENT, RESOURCES_ARGUMENT
 from pybel import to_bel_lines, to_graphml, to_bytes, to_csv
 from pybel import union
 from pybel.constants import *
@@ -57,6 +58,23 @@ def process_request(request):
         pathway_id: resource
         for pathway_id, resource in zip(pathways_list, resources_list)
     }
+
+
+def get_annotations_from_request(request):
+    """Return dictionary with annotations.
+
+    :param flask.request request: http request
+    :rtype: dict
+    """
+    annotations = {}
+    for arguments in request.args.keys():
+
+        if arguments in BLACK_LIST:
+            continue
+
+        annotations[arguments] = request.args.getlist(arguments)
+
+    return annotations
 
 
 def merge_pathways(pathways):

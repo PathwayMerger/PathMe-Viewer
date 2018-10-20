@@ -9,6 +9,8 @@
  *
  */
 
+//Constant to collapse to equivalent proteins/rnas and genes to the same node
+window.collapse2Genes = false;
 
 // Constants used in the graph controller
 var nominalBaseNodeSize = 10; // Default node radius
@@ -158,9 +160,15 @@ function getAnnotationForTree(tree, firstTry) {
 function renderNetwork(tree) {
     // Store filtering parameters from tree and global variables (pks, expand/delete nodes)
 
-    var args = getDefaultAjaxParameters(tree);
+    var args = getDefaultAjaxParameters(tree, true);
+
+    if (window.collapse2Genes === true){
+        args['collapse_to_genes'] = true;
+    }
 
     var renderParameters = $.param(args, true);
+
+    window.history.pushState("PathMe-Viewer", "PathMe-Viewer", "/pathme/viewer?" + renderParameters);
 
     $.getJSON("/api/pathway/?" + renderParameters, function (data) {
         initD3Force(data, tree);
@@ -399,6 +407,11 @@ $(document).ready(function () {
         tree.collapseDeep();
     });
 
+    $("#collapse-to-genes").on("click", function () {
+        window.collapse2Genes = true;
+        renderNetwork(tree);
+    });
+
     // // Export network as an image
     d3.select("#save-svg-graph").on("click", function () {
         saveSvgAsPng(d3.select('#graph-svg').nodes()[0], 'MyNetwork.png');
@@ -406,7 +419,7 @@ $(document).ready(function () {
 
     // Export to BEL
     $("#bel-button").click(function () {
-        var args = getDefaultAjaxParameters(tree);
+        var args = getDefaultAjaxParameters(tree, true);
         args["format"] = "bel";
 
         $.ajax({
@@ -419,7 +432,7 @@ $(document).ready(function () {
     });
 
     $(".explorer-download").click(function () {
-        var args = getDefaultAjaxParameters(tree);
+        var args = getDefaultAjaxParameters(tree, true);
         args["format"] = $(this).data('format');
         window.location.href = "/api/pathway/?" + $.param(args, true);
     });
@@ -1431,7 +1444,7 @@ function initD3Force(graph, tree) {
 
     // Color legend
     $.each(subgraphToColor, function (pathwayId, color) {
-        $('#' + pathwayId).css({"background":color});
+        $('#' + pathwayId).css({"background": color});
     });
 
     // add interaction to the groups
@@ -1478,7 +1491,7 @@ function initD3Force(graph, tree) {
 
             var checkbox = pathForm.find("input[name='visualization-options']").is(":checked");
 
-            var args = getDefaultAjaxParameters(tree);
+            var args = getDefaultAjaxParameters(tree, true);
             args["source"] = nodeNamesToId[pathForm.find("input[name='source']").val()];
             args["target"] = nodeNamesToId[pathForm.find("input[name='target']").val()];
             args["paths_method"] = $("input[name=paths_method]:checked", pathForm).val();
@@ -1612,7 +1625,7 @@ function initD3Force(graph, tree) {
 
     randomPaths.on("click", function () {
 
-            var args = getDefaultAjaxParameters(tree);
+            var args = getDefaultAjaxParameters(tree, true);
 
             $.ajax({
                 url: "/api/pathway/paths/random",
@@ -1673,7 +1686,7 @@ function initD3Force(graph, tree) {
     $("#betweenness-button").on("click", function () {
         if (betwennessForm.valid()) {
 
-            var args = getDefaultAjaxParameters(tree);
+            var args = getDefaultAjaxParameters(tree, true);
 
             args["node_number"] = betwennessForm.find("input[name='betweenness']").val();
 

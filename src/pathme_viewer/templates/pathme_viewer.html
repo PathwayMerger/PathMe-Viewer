@@ -49,7 +49,8 @@
 
                 <div class="panel-body">
 
-                    <button type="button" class="btn btn-primary text-center" data-toggle="modal" data-target="#info-graph">
+                    <button type="button" class="btn btn-primary text-center" data-toggle="modal"
+                            data-target="#info-graph">
                         Help
                     </button>
 
@@ -60,7 +61,8 @@
                     <button type="button" class="btn btn-primary text-center" data-toggle="modal" data-target="#paths">
                         Path Mining
                     </button>
-                    <button type="button" class="btn btn-primary text-center" data-toggle="modal" data-target="#algorithms">
+                    <button type="button" class="btn btn-primary text-center" data-toggle="modal"
+                            data-target="#algorithms">
                         Algorithms
                     </button>
                 </div>
@@ -110,6 +112,14 @@
                                     <button type="button" id="collapse-tree"
                                             class="btn btn-primary not-rounded width-50 pull-right">
                                         Collapse Annotations
+                                    </button>
+                                    <button type="button" id="collapse-to-genes" data-toggle="popover"
+                                            title="Collapse equivalent nodes to genes"
+                                            data-content="Because BEL can capture different levels of biology, nodes can be represented
+                                            as genes, RNAs, and proteins. This button allows to merge equivalent nodes in these different scales
+                                            (e.g., protein(AKT1) and gene(AKT1)) into one node."
+                                            class="btn btn-primary not-rounded">
+                                        Merge equivalent Proteins/RNAs/Genes
                                     </button>
                                     <input placeholder="Annotation search" id="tree-search"
                                            class="not-rounded form-control pull-left"
