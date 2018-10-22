@@ -6,6 +6,11 @@ BEL files can be stored in the PathMe Viewer's database and so they queried in t
 
 This web application is publicly accessible at http://pathme.scai.fraunhofer.de/ but can be locally deployed using Docker or PyPI (see Installation/Deployment sections).
 
+Citation
+--------
+If you use PathMe in your work, please cite:
+
+.. [1] Domingo-Fernández, D., *et al.* (2018). PathMe: Merging and exploring mechanistic pathway knowledge. bioRxiv.
 
 How to Use
 ----------
