@@ -2,7 +2,7 @@ PathMe Viewer |build| |coverage| |docs| |zenodo|
 ================================================
 
 This web application aims to facilitate querying, browsing, and navigating pathway knowledge formalized in Biological Expression Language (BEL). While it was built paralelly with `PathMe <https://github.com/ComPath/PathMe>`_ , to facilitate the exploration of the databases harmonized by this package, the PathMe Viewer supports the visualization of BEL files. 
-BEL files can be stored in the PathMe Viewer's database and so they queried in the main page (Figure 1). In this page, users can select multiple BEL files (pathways) to renders the corresponding merged network. The network visualization page (Figure 2) is powered by multiple, built-in functionalities. For instance, when multiple pathways are selected, a novel boundary visualization facilitates the exploration of pathway cross-talks (i.e. the interaction of pathways through their sharing of common entities). Furthermore, search and mining tools enable navigation of the resulting network as well as the identification of contradictory and consensus relationships across pathways. Finally, networks can be exported to multiple formats such as BEL, GraphML, or JSON to be used in other analytical software.
+BEL files can be stored in the PathMe Viewer's database and so they queried in the main page. In this page, users can select multiple BEL files (pathways) to renders the corresponding merged network in a user-friendly visualization powered by multiple built-in functionalities.
 
 This web application is publicly accessible at http://pathme.scai.fraunhofer.de/ but can be locally deployed using Docker or PyPI (see Installation/Deployment sections).
 
@@ -21,7 +21,6 @@ The resulting network is visualized in the next page where multiple functionalit
     
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
-
 PathMe can be installed easily from `PyPI <https://pypi.python.org/pypi/pathme>`_ running the following code in your terminal:
 
 .. code-block:: sh
@@ -34,9 +33,10 @@ or from the latest code on `GitHub <https://github.com/ComPath/PathMe-Viewer>`_ 
 
     $ python3 -m pip install git+https://github.com/ComPath/PathMe-Viewer.git@master
 
+
 Database
 --------
-In order to visualize BEL files with the viwer, you have to load them into the databases. The following command to loads the databases converted to BEL by PathMe (note that the first time it runs might take a couple of hours). Additionally, users can customize the imports to other bel files or databases.
+In order to visualize BEL files with the viwer, you have to load them into the databases. The following command to loads the databases converted to BEL by PathMe (note that the first time it runs might take a couple of hours). Additionally, users can customize the imports to other bel files or databases (please see the `documentation page <https://pathme-viewer.readthedocs.io/en/latest/>`_ ).
 
 .. code-block:: python
 
