@@ -10,7 +10,7 @@ Citation
 --------
 If you use PathMe in your work, please cite:
 
-.. [1] Domingo-Fernández, D., *et al.* (2018). PathMe: Merging and exploring mechanistic pathway knowledge. bioRxiv.
+Domingo-Fernández, D., *et al.* (2018). PathMe: Merging and exploring mechanistic pathway knowledge. bioRxiv.
 
 How to Use
 ----------
