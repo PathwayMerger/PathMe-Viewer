@@ -159,6 +159,9 @@ def get_network():
         'Exporting merged graph with {} nodes and {} edges'.format(graph.number_of_nodes(), graph.number_of_edges())
     )
 
+    graph.name = 'Merged graph from {}'.format([pathway_name for pathway_name in pathways])
+    graph.version = '0.0.0'
+
     return export_graph(graph, request.args.get('format'))
 
 

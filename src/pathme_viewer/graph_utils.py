@@ -104,7 +104,6 @@ def merge_pathways(pathways):
         graph.annotation_pattern['PathwayID'] = '.*'
         graph.annotation_pattern['Pathway name'] = '.*'
         graph.annotation_list['Interesting edge'] = {'Contradicts', 'May contradict'}
-
         add_annotation_key(graph)
 
         add_annotation_value(graph, 'Pathway name', pathway.name)
@@ -124,6 +123,8 @@ def merge_pathways(pathways):
         )
 
     graph = union(networks)
+    graph.name = 'Merged graph from {}'.format([graph.name for graph in networks])
+    graph.version = '0.0.0'
 
     contradicting_edges = get_contradiction_summary(graph)
 
@@ -201,7 +202,8 @@ def export_graph(graph, format=None):
     :param format: desire format
     :return: graph representation in different format
     """
-
+    print(graph.name)
+    print(graph.version)
     if format is None or format == 'json':
         data = to_json_custom(graph)
         return jsonify(data)

@@ -19,6 +19,7 @@ DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)
 
 HUMAN_WIKIPATHWAYS = os.path.join(WIKIPATHWAYS_FILES, 'wp', 'Human')
 
+FORMAT = 'format'
 PATHWAYS_ARGUMENT = 'pathways[]'
 RESOURCES_ARGUMENT = 'resources[]'
 UNDIRECTED = 'undirected'
@@ -28,6 +29,7 @@ COLLAPSE_TO_GENES = 'collapse_to_genes'
 
 BLACK_LIST = {
     COLLAPSE_TO_GENES,
+    FORMAT,
     PATHWAYS_ARGUMENT,
     RESOURCES_ARGUMENT,
     UNDIRECTED,
