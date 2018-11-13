@@ -418,3 +418,9 @@ def api_pathway_autocompletion_resource_specific():
         {'label': pathway.name, 'value': pathway.pathway_id}
         for pathway in query_results
     ])
+
+
+@pathme.route('/api/database/pathways')
+def api_pathways_in_database():
+    """Return number of pathways in database."""
+    return jsonify(current_app.pathme_manager.count_pathways())
