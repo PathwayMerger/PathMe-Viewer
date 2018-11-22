@@ -1,7 +1,17 @@
-import constant from "./constant";
-import {quadtree} from 'd3-quadtree';
+// Copyright 2018 Two Six Labs, LLC. v1.0.0 d3-force-reuse https://github.com/twosixlabs/d3-force-reuse/
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3-quadtree')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'd3-quadtree'], factory) :
+	(factory((global.d3 = global.d3 || {}),global.d3));
+}(this, (function (exports,d3Quadtree) { 'use strict';
 
-export default function() {
+var constant = function(x) {
+  return function() {
+    return x;
+  };
+};
+
+var manyBodyReuse = function() {
   var nodes,
       node,
       alpha,
@@ -35,12 +45,12 @@ export default function() {
         return false;
       }
     };
-  }
+  };
 
   function force(_) {
     var i, n = nodes.length;
     if (!tree || updateBH(iter, nodes)) {
-      tree = quadtree(nodes, x, y).visitAfter(accumulate);
+      tree = d3Quadtree.quadtree(nodes, x, y).visitAfter(accumulate);
       nodes.update.push(iter);
     }
     for (alpha = _, i = 0; i < n; ++i) node = nodes[i], tree.visit(apply);
@@ -121,11 +131,6 @@ export default function() {
       y = quad.data.y - node.y;
       l = x * x + y * y;
 
-      // Limit forces for very close nodes; randomize direction if coincident.
-      if (x === 0) x = jiggle(), l += x * x;
-      if (y === 0) y = jiggle(), l += y * y;
-      if (l < distanceMin2) l = Math.sqrt(distanceMin2 * l);
-
       w = strengths[quad.data.index] * alpha / l;
 
       node.vx += x * w;
@@ -159,4 +164,10 @@ export default function() {
   };
 
   return force;
-}
+};
+
+exports.forceManyBodyReuse = manyBodyReuse;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
