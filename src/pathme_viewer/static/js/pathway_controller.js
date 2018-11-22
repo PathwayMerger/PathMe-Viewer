@@ -680,7 +680,7 @@ function initD3Force(graph, tree) {
             })
             .strength(collideStrength)
         )
-        .force("charge", d3.forceManyBody()
+        .force("charge", d3.forceManyBodyReuse()
             .strength(fCharge)
         )
         .force("center", d3.forceCenter(w / 2, h / 2))
