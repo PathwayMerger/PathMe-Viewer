@@ -100,5 +100,6 @@ if __name__ == '__main__':
         package_dir={'': 'src'},
         include_package_data=True,
         install_requires=INSTALL_REQUIRES,
-        extras_require=EXTRAS_REQUIRE
+        extras_require=EXTRAS_REQUIRE,
+        zip_safe=False,
     )
