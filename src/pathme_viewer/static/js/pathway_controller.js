@@ -1514,8 +1514,8 @@ function initD3Force(graph, tree) {
                         resetAttributes();
 
                         // Apply changes in style for select paths
-                        hideNodesTextInPaths(paths["paths"], checkbox, 'id');
-                        colorPaths(paths["paths"], checkbox);
+                        hideNodesTextInPaths(paths, checkbox, 'id');
+                        colorPaths(paths, checkbox);
                         resetAttributesDoubleClick();
 
                     }
