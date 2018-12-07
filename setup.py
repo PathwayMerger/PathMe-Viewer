@@ -35,7 +35,7 @@ INSTALL_REQUIRES = [
     'requests',
     'bio2bel==0.2.0',
     'bio2bel_chebi==0.2.0',
-    'bio2bel_hgnc=0.2.1',
+    'bio2bel_hgnc==0.2.1',
     'pybel==0.12.2',
     'pybel_tools==0.7.0',
     'pathme',
