@@ -26,9 +26,9 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: Bio-Informatics'
 ]
 INSTALL_REQUIRES = [
-    'pandas==0.23.4',
+    'pandas',
     'tqdm==4.28.1',
-    'numpy==1.15.4',
+    'numpy',
     'compath',
     'rdflib==4.2.2',
     'rdflib-jsonld',
