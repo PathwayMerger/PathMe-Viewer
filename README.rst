@@ -1,10 +1,16 @@
 PathMe Viewer |build| |coverage| |docs| |zenodo|
 ================================================
 
-This web application aims to facilitate querying, browsing, and navigating pathway knowledge formalized in Biological Expression Language (BEL). While it was built paralelly with `PathMe <https://github.com/ComPath/PathMe>`_ , to facilitate the exploration of the databases harmonized by this package, the PathMe Viewer supports the visualization of BEL files. 
-BEL files can be stored in the PathMe Viewer's database and so they queried in the main page. In this page, users can select multiple BEL files (pathways) to renders the corresponding merged network in a user-friendly visualization powered by multiple built-in functionalities.
+This web application aims to facilitate querying, browsing, and navigating pathway knowledge formalized in Biological
+Expression Language (BEL). While it was built paralelly with `PathMe <https://github.com/ComPath/PathMe>`_ , to
+facilitate the exploration of the databases harmonized by this package, the PathMe Viewer supports the visualization
+of BEL files.
+BEL files can be stored in the PathMe Viewer's database and so they queried in the main page. In this page, users can
+select multiple BEL files (pathways) to renders the corresponding merged network in a user-friendly visualization
+powered by multiple built-in functionalities.
 
-This web application is publicly accessible at http://pathme.scai.fraunhofer.de/ but can be locally deployed using Docker or PyPI (see Installation/Deployment sections).
+This web application is publicly accessible at http://pathme.scai.fraunhofer.de/ but can be locally deployed using
+Docker or PyPI (see Installation/Deployment sections).
 
 Citation
 --------
@@ -14,19 +20,24 @@ Domingo-Fernández, D., *et al.* (2018). PathMe: Merging and exploring mechanist
 
 How to Use
 ----------
-Exploring pathways through this web application is simple. First, select a set of pathways from different databases. To choose a pathway, first select a database and the autocompletion form will then guide you to find pathway(s) of interest to you. After pathways have been selected, click on the "Explore" button to render the merged network corresponding to the selected pathways.
+Exploring pathways through this web application is simple. First, select a set of pathways from different databases. To
+choose a pathway, first select a database and the autocompletion form will then guide you to find pathway(s) of
+interest to you. After pathways have been selected, click on the "Explore" button to render the merged network
+corresponding to the selected pathways.
 
 .. image:: https://github.com/ComPath/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/main_page_screenshot.png
     :width: 500px
 
-The resulting network is visualized in the next page where multiple functionalities enable the exploration of the pathway(s).
+The resulting network is visualized in the next page where multiple functionalities enable the exploration of the
+pathway(s).
 
 .. image:: https://github.com/ComPath/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/visualization_example.png
     :width: 500px
-    
+
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
-PathMe can be installed easily from `PyPI <https://pypi.python.org/pypi/pathme>`_ running the following code in your terminal:
+PathMe can be installed easily from `PyPI <https://pypi.python.org/pypi/pathme>`_ running the following code in your
+terminal:
 
 .. code-block:: sh
 
@@ -41,7 +52,10 @@ or from the latest code on `GitHub <https://github.com/ComPath/PathMe-Viewer>`_ 
 
 Database
 --------
-In order to visualize BEL files with the viwer, you have to load them into the databases. The following command to loads the databases converted to BEL by PathMe (note that the first time it runs might take a couple of hours). Additionally, users can customize the imports to other bel files or databases (please see the `documentation page <https://pathme-viewer.readthedocs.io/en/latest/>`_ ).
+In order to visualize BEL files with the viwer, you have to load them into the databases. The following command to
+loads the databases converted to BEL by PathMe (note that the first time it runs might take a couple of hours).
+Additionally, users can customize the imports to other bel files or databases (please see the `documentation page
+<https://pathme-viewer.readthedocs.io/en/latest/>`_ ).
 
 .. code-block:: python
 
@@ -61,7 +75,8 @@ The content of the database can be erased by running:
 
 Deployment
 ----------
-If you have already installed the PathMe-Viewer as a Python package and you have already populated the database, now you can deploy the web application by running:
+If you have already installed the PathMe-Viewer as a Python package and you have already populated the database, now
+you can deploy the web application by running:
 
 .. code-block:: python
 
@@ -71,10 +86,12 @@ Note that the database runs by default in the following port: http://0.0.0.0:500
 modified by changing the default parameters (run: "python3 -m pathme_viewer web --help" for more info).
 
 Deployment of PathMe Viewer using Docker
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To quickly deploy the web application locally, you can also use Docker. This can be achieved by running the following commands after installing Docker.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To quickly deploy the web application locally, you can also use Docker. This can be achieved by running the following
+commands after installing Docker.
 
-1. Build a container named 'pathme' version 0.0.1 (you must be in the root directory after cloning this package with Git).
+1. Build a container named 'pathme' version 0.0.1 (you must be in the root directory after cloning this package with
+   Git).
 
 .. code-block:: sh
 
@@ -89,7 +106,7 @@ To quickly deploy the web application locally, you can also use Docker. This can
 Note: the docker file is meant to be run on 0.0.0.0:5000. If you want to change the host/port
 please modify dockerfile (line 55) and src/bin/bootstrap.sh (line 23).
 
- 
+
 .. |build| image:: https://travis-ci.org/ComPath/PathMe-Viewer.svg?branch=master
     :target: https://travis-ci.org/ComPath/PathMe-Viewer
     :alt: Build Status
@@ -117,4 +134,3 @@ please modify dockerfile (line 55) and src/bin/bootstrap.sh (line 23).
 
 .. |zenodo| image:: https://zenodo.org/badge/144898535.svg
    :target: https://zenodo.org/badge/latestdoi/144898535
-
