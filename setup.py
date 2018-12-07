@@ -26,18 +26,18 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: Bio-Informatics'
 ]
 INSTALL_REQUIRES = [
-    'pandas',
-    'tqdm',
-    'numpy',
+    'pandas==0.23.4',
+    'tqdm==4.28.1',
+    'numpy==1.15.4',
     'compath',
-    'rdflib',
+    'rdflib==4.2.2',
     'rdflib-jsonld',
     'requests',
-    'bio2bel',
-    'bio2bel_chebi',
-    'bio2bel_hgnc',
-    'pybel',
-    'pybel_tools',
+    'bio2bel==0.2.0',
+    'bio2bel_chebi==0.2.0',
+    'bio2bel_hgnc=0.2.1',
+    'pybel==0.12.2',
+    'pybel_tools==0.7.0',
     'pathme',
 ]
 EXTRAS_REQUIRE = {
