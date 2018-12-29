@@ -2,7 +2,7 @@ PathMe Viewer |build| |coverage| |docs| |zenodo|
 ================================================
 
 This web application aims to facilitate querying, browsing, and navigating pathway knowledge formalized in Biological
-Expression Language (BEL). While it was built paralelly with `PathMe <https://github.com/ComPath/PathMe>`_ , to
+Expression Language (BEL). While it was built paralelly with `PathMe <https://github.com/PathwayMerger/PathMe>`_ , to
 facilitate the exploration of the databases harmonized by this package, the PathMe Viewer supports the visualization
 of BEL files.
 BEL files can be stored in the PathMe Viewer's database and so they queried in the main page. In this page, users can
@@ -25,13 +25,13 @@ choose a pathway, first select a database and the autocompletion form will then 
 interest to you. After pathways have been selected, click on the "Explore" button to render the merged network
 corresponding to the selected pathways.
 
-.. image:: https://github.com/ComPath/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/main_page_screenshot.png
+.. image:: https://github.com/PathwayMerger/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/main_page_screenshot.png
     :width: 500px
 
 The resulting network is visualized in the next page where multiple functionalities enable the exploration of the
 pathway(s).
 
-.. image:: https://github.com/ComPath/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/visualization_example.png
+.. image:: https://github.com/PathwayMerger/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/visualization_example.png
     :width: 500px
 
 Installation |pypi_version| |python_versions| |pypi_license|
@@ -43,7 +43,7 @@ terminal:
 
     $ python3 -m pip install pathme_viewer
 
-or from the latest code on `GitHub <https://github.com/ComPath/PathMe-Viewer>`_ with:
+or from the latest code on `GitHub <https://github.com/PathwayMerger/PathMe-Viewer>`_ with:
 
 .. code-block:: sh
 
@@ -107,20 +107,20 @@ Note: the docker file is meant to be run on 0.0.0.0:5000. If you want to change 
 please modify dockerfile (line 55) and src/bin/bootstrap.sh (line 23).
 
 
-.. |build| image:: https://travis-ci.org/ComPath/PathMe-Viewer.svg?branch=master
-    :target: https://travis-ci.org/ComPath/PathMe-Viewer
+.. |build| image:: https://travis-ci.org/pathwaymerger/PathMe-Viewer.svg?branch=master
+    :target: https://travis-ci.org/pathwaymerger/PathMe-Viewer
     :alt: Build Status
 
-.. |coverage| image:: https://codecov.io/gh/ComPath/PathMe-Viewer/coverage.svg?branch=master
-    :target: https://codecov.io/gh/ComPath/PathMe-Viewer?branch=master
+.. |coverage| image:: https://codecov.io/gh/pathwaymerger/PathMe-Viewer/coverage.svg?branch=master
+    :target: https://codecov.io/gh/pathwaymerger/PathMe-Viewer?branch=master
     :alt: Coverage Status
 
 .. |docs| image:: http://readthedocs.org/projects/pathme_viewer/badge/?version=latest
     :target: https://pathme_viewer.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-.. |climate| image:: https://codeclimate.com/github/compath/pathme_viewer/badges/gpa.svg
-    :target: https://codeclimate.com/github/compath/pathme_viewer
+.. |climate| image:: https://codeclimate.com/github/pathwaymerger/pathme_viewer/badges/gpa.svg
+    :target: https://codeclimate.com/github/pathwaymerger/pathme_viewer
     :alt: Code Climate
 
 .. |python_versions| image:: https://img.shields.io/pypi/pyversions/pathme_viewer.svg
