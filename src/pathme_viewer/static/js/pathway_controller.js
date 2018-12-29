@@ -15,7 +15,7 @@ window.collapse2Genes = false;
 // Constants used in the graph controller
 var nominalBaseNodeSize = 10; // Default node radius
 var edgeStroke = 3.5;  // Edge width
-var minZoom = 0.1, maxZoom = 10; // Zoom variables
+var minZoom = 0.1, maxZoom = 15; // Zoom variables
 var opacity = 0.3; //opacity links
 
 //Convex Hull Constants
@@ -1703,12 +1703,12 @@ function initD3Force(graph, tree) {
 
                     // Reduce to 7 radius the nodes not in top x
                     $.each(nodesToReduce._groups[0], function (index, value) {
-                        value.childNodes[0].setAttribute("r", "7");
+                        value.childNodes[0].setAttribute("r", "6");
                     });
 
                     // Make bigger by factor scale the nodes in the top x
                     //TODO: change this coefficient
-                    var nodeFactor = (nominalBaseNodeSize / 3) / nodesToIncrease.length;
+                    var nodeFactor = (nominalBaseNodeSize / 2) / nodesToIncrease.length;
                     var factor = nominalBaseNodeSize + nodeFactor;
 
                     $.each(nodesToIncrease.reverse(), function (index, value) {
