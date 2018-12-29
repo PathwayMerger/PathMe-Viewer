@@ -107,8 +107,8 @@ Note: the docker file is meant to be run on 0.0.0.0:5000. If you want to change 
 please modify dockerfile (line 55) and src/bin/bootstrap.sh (line 23).
 
 
-.. |build| image:: https://travis-ci.org/pathwaymerger/PathMe-Viewer.svg?branch=master
-    :target: https://travis-ci.org/pathwaymerger/PathMe-Viewer
+.. |build| image:: https://travis-ci.com/pathwaymerger/PathMe-Viewer.svg?branch=master
+    :target: https://travis-ci.com/pathwaymerger/PathMe-Viewer
     :alt: Build Status
 
 .. |coverage| image:: https://codecov.io/gh/pathwaymerger/PathMe-Viewer/coverage.svg?branch=master
