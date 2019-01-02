@@ -18,9 +18,8 @@ from flask import (
 from flask_admin.contrib.sqla import ModelView
 from networkx import NetworkXNoPath, all_simple_paths, betweenness_centrality, shortest_path
 from pkg_resources import resource_filename
-from pybel.struct import get_random_path
+from pybel.struct import get_random_path, get_subgraph_by_annotations
 from pybel.struct.mutation.collapse import collapse_to_genes
-from pybel_tools.selection import get_subgraph_by_annotations
 
 from pathme_viewer.constants import COLLAPSE_TO_GENES, PATHS_METHOD, RANDOM_PATH, UNDIRECTED
 from pathme_viewer.graph_utils import (
