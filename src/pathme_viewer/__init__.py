@@ -71,10 +71,10 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
     try:
         bio2bel_module = entry_point.load()
     except UnknownExtra:
-        log.warning('Unknown extra in %s', entry)
+        log.exception('Unknown extra in %s', entry)
         continue
     except VersionConflict:
-        log.warning('Version conflict in %s', entry)
+        log.exception('Version conflict in %s', entry)
         continue
 
     try:
