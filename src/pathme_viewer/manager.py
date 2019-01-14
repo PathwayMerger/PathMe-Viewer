@@ -159,7 +159,7 @@ class Manager(object):
 
         return pathway
 
-    def query_pathway_by_name(self, query, resource, limit=None):
+    def query_pathway_by_name(self, query, limit=None):
         """Return all pathways having the query in their names.
 
         :param str query: query string

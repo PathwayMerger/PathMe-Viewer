@@ -34,12 +34,12 @@ def _prepare_pathway_model(pathway_id, database, bel_graph):
     return {
         'pathway_id': pathway_id,
         'resource_name': database,
-        'name': bel_graph.document['name'],
-        'version': bel_graph.document['version'],
+        'name': bel_graph.name,
+        'version': bel_graph.version,
         'number_of_nodes': bel_graph.number_of_nodes(),
         'number_of_edges': bel_graph.number_of_edges(),
-        'authors': bel_graph.document['authors'],
-        'contact': bel_graph.document['contact'],
+        'authors': bel_graph.authors,
+        'contact': bel_graph.contact,
         'description': bel_graph.document.get('description')
         if isinstance(bel_graph.document.get('description'), str)
         else '{}'.format(bel_graph.document.get('description')),
