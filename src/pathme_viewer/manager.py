@@ -7,6 +7,7 @@ import logging
 from bio2bel.utils import get_connection
 from sqlalchemy import create_engine, func, and_
 from sqlalchemy.orm import scoped_session, sessionmaker
+from pybel import from_bytes
 
 from .constants import MODULE_NAME
 from .models import Base, Pathway
@@ -67,6 +68,16 @@ class Manager(object):
         :rtype: list[Pathway]
         """
         return self.session.query(Pathway).all()
+
+    def get_all_pathway_graphs(self):
+        """Get all pathway graphs.
+
+        :rtype: list[pybel.BELGraph]
+        """
+        return [
+            from_bytes(pathway.blob)
+            for pathway in self.get_all_pathways()
+        ]
 
     def get_pathway_by_id(self, pathway_id, resource_name):
         """Get pathway by canonical identifier.

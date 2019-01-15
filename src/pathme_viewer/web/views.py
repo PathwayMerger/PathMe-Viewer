@@ -18,6 +18,7 @@ from flask import (
 from flask_admin.contrib.sqla import ModelView
 from networkx import NetworkXNoPath, all_simple_paths, betweenness_centrality, shortest_path
 from pkg_resources import resource_filename
+from pybel import from_bytes
 from pybel.struct import get_random_path
 from pybel.struct.mutation.collapse import collapse_to_genes
 from pybel_tools.selection import get_subgraph_by_annotations
@@ -170,7 +171,7 @@ def viewer():
 
 @pathme.route('/api/pathway/')
 def get_network():
-    """Builds a graph from request and sends it in the given format."""
+    """Build a graph from request and sends it in the given format."""
     pathways = process_request(request)
 
     graph = merge_pathways(pathways)
@@ -195,7 +196,7 @@ def get_network():
 
 @pathme.route('/api/tree/')
 def get_network_tree():
-    """Builds a graph and sends the annotation ready to be rendered in the tree."""
+    """Build a graph and sends the annotation ready to be rendered in the tree."""
     pathways = process_request(request)
 
     graph = merge_pathways(pathways)
@@ -208,7 +209,7 @@ def get_network_tree():
     if COLLAPSE_TO_GENES in request.args:
         collapse_to_genes(graph)
 
-    # Returns annotation in graph
+    # Return annotation in graph
     return jsonify(get_tree_annotations(graph))
 
 
@@ -223,9 +224,34 @@ def delete_pathways():
     )
 
 
+@pathme.route('/api/pathway/node/<bel_node>')
+def get_pathways_with_node(bel_node):
+    """Return all pathways having a given node"""
+
+    pathways = set()
+
+    for pathway in current_app.pathme_manager.get_all_pathways():
+        # Load networkX graph
+        graph = from_bytes(pathway.blob)
+
+        # Check if node is in the pathway
+        for node in graph:
+
+            if node.as_bel() != bel_node:
+                continue
+
+            pathways.add((pathway.pathway_id, pathway.resource_name))
+
+    return jsonify([
+        [pathway_id, resource]
+        for pathway_id, resource in pathways
+    ]
+    )
+
+
 @pathme.route('/api/pathway/paths')
 def get_paths():
-    """Returns array of shortest/all paths given a source node and target node both belonging in the graph
+    """Return array of shortest/all paths given a source node and target node both belonging in the graph
 
     ---
     tags:
@@ -338,7 +364,7 @@ def get_paths():
 
 @pathme.route('/api/pathway/paths/random')
 def get_random_paths():
-    """Gets random paths given the pathways in the graph
+    """Get random paths given the pathways in the graph
 
     ---
     tags:
@@ -371,7 +397,7 @@ def get_random_paths():
 
 @pathme.route('/api/pathway/centrality')
 def get_nodes_by_betweenness_centrality():
-    """Gets a list of nodes with the top betweenness-centrality
+    """Get a list of nodes with the top betweenness-centrality
 
     ---
     tags:

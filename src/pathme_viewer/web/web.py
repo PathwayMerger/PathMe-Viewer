@@ -13,7 +13,6 @@ from flask_bootstrap import Bootstrap
 from flask_security import Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from pybel import from_bytes
 
 from ..constants import DEFAULT_CACHE_CONNECTION
 from ..manager import Manager
@@ -91,11 +90,11 @@ def create_app(template_folder=None, static_folder=None):
 
     log.info('Caching nodes in app')
 
-    app.nodes = {}
-    for pathway in app.pathme_manager.get_all_pathways():
-        graph = from_bytes(pathway.blob)
-        for node in graph:
-            app.nodes[node.as_bel] = node
+    app.nodes = {
+        node.as_bel(): node
+        for pathway in app.pathme_manager.get_all_pathway_graphs()
+        for node in pathway
+    }
 
     log.info('Done building %s in %.2f seconds', app, time.time() - t)
     return app
