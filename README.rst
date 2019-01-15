@@ -2,7 +2,7 @@ PathMe Viewer |build| |coverage| |docs| |zenodo|
 ================================================
 
 This web application aims to facilitate querying, browsing, and navigating pathway knowledge formalized in Biological
-Expression Language (BEL). While it was built paralelly with `PathMe <https://github.com/PathwayMerger/PathMe>`_ , to
+Expression Language (BEL). While it was built paralelly with `PathMe <https://github.com/PathwayMerger/PathMe>`_, to
 facilitate the exploration of the databases harmonized by this package, the PathMe Viewer supports the visualization
 of BEL files.
 BEL files can be stored in the PathMe Viewer's database and so they queried in the main page. In this page, users can
@@ -14,9 +14,10 @@ Docker or PyPI (see Installation/Deployment sections).
 
 Citation
 --------
-If you use PathMe in your work, please cite:
+If you use PathMe in your work, please cite [1]_:
 
-Domingo-Fernández, D., *et al.* (2018). PathMe: Merging and exploring mechanistic pathway knowledge. bioRxiv 451625.
+.. [1] Domingo-Fernández, D., *et al.* (2018). `PathMe: Merging and exploring mechanistic pathway knowledge
+    <https://doi.org/10.1101/451625>`_. bioRxiv *451625*.
 
 How to Use
 ----------
