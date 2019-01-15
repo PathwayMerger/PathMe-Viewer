@@ -2,22 +2,21 @@
 
 """This module contains the methods used to deal with BELGraphs."""
 
-from collections import defaultdict
 from operator import methodcaller
 
 from flask import abort, Response, jsonify, send_file
 from flask import current_app
-from pybel_tools.mutation.metadata import serialize_authors
-from pybel_tools.summary import relation_set_has_contradictions
-from six import BytesIO, StringIO
-
-from pathme_viewer.constants import BLACK_LIST, PATHWAYS_ARGUMENT, RESOURCES_ARGUMENT
 from pybel import to_bel_lines, to_graphml, to_bytes, to_csv
 from pybel import union
 from pybel.constants import *
 from pybel.io import from_bytes
 from pybel.struct import add_annotation_value
 from pybel.struct.summary import get_annotation_values_by_annotation
+from pybel_tools.mutation.metadata import serialize_authors
+from pybel_tools.summary import relation_set_has_contradictions
+from six import BytesIO, StringIO
+
+from pathme_viewer.constants import BLACK_LIST, PATHWAYS_ARGUMENT, RESOURCES_ARGUMENT
 
 
 def throw_parameter_error(parameter):
