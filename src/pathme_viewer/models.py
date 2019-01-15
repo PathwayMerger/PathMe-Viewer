@@ -57,6 +57,11 @@ class Pathway(Base):
             DATABASE_STYLE_DICT.get(self.resource_name, self.resource_name)
         )
 
+    @property
+    def pathway_tuple(self):
+        """Return pathway name."""
+        return self.name, DATABASE_STYLE_DICT.get(self.resource_name, self.resource_name)
+
     def as_bel(self):
         """Get this network and loads it into a :class:`BELGraph`.
 

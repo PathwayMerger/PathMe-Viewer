@@ -22,7 +22,14 @@ from pybel.struct import get_random_path
 from pybel.struct.mutation.collapse import collapse_to_genes
 from pybel_tools.selection import get_subgraph_by_annotations
 
-from pathme_viewer.constants import COLLAPSE_TO_GENES, PATHS_METHOD, RANDOM_PATH, UNDIRECTED
+from pathme_viewer.constants import (
+    COLLAPSE_TO_GENES,
+    DATABASE_STYLE_DICT,
+    DATABASE_URL_DICT,
+    PATHS_METHOD,
+    RANDOM_PATH,
+    UNDIRECTED
+)
 from pathme_viewer.graph_utils import (
     export_graph,
     get_annotations_from_request,
@@ -119,24 +126,36 @@ def viewer():
     pathways = process_request(request)
 
     # List of all pathway names
-    pathway_names = {}
     pathway_id_to_name = {}
+    pathway_display_names = {}
+    pathway_id_to_display_name = {}
+    pathway_to_resource = {}
     for pathway_id, resource in pathways.items():
         pathway = current_app.pathme_manager.get_pathway_by_id(pathway_id, resource)
 
         if not pathway:
             continue
 
-        pathway_id_to_name[pathway_id] = pathway.display_name
-        pathway_names[pathway.display_name] = pathway_id
+        pathway_id_to_display_name[pathway_id] = pathway.display_name
+        pathway_to_resource[pathway_id] = resource
+        pathway_display_names[pathway.display_name] = pathway_id
+        pathway_id_to_name[pathway_id] = pathway.name
 
     return render_template(
         'pathme_viewer.html',
         pathways=pathways,
+        pathway_id_to_name=pathway_id_to_name,
         pathways_name='+'.join(
-            '{}<div class="circle" id="{}"></div>'.format(pathway_name, pathway_id)
-            for pathway_name, pathway_id in pathway_names.items()),
+            '<a href="{}">{}</a><div class="circle {}"></div>'.format(
+                DATABASE_URL_DICT[pathway_to_resource[pathway_id]].format(pathway_id.strip('hsa')),
+                pathway_name,
+                pathway_id
+            )
+            for pathway_name, pathway_id in pathway_display_names.items()
+        ),
         pathway_ids=list(pathways.keys()),
+        DATABASE_STYLE_DICT=DATABASE_STYLE_DICT,
+        DATABASE_URL_DICT=DATABASE_URL_DICT
     )
 
 

@@ -13,6 +13,12 @@ DATABASE_STYLE_DICT = {
     WIKIPATHWAYS: 'WikiPathways',
 }
 
+DATABASE_URL_DICT = {
+    KEGG: 'http://www.kegg.jp/kegg-bin/show_pathway?map=map{}&show_description=show',
+    REACTOME: 'https://reactome.org/PathwayBrowser/#/{}',
+    WIKIPATHWAYS: 'https://www.wikipathways.org/index.php/Pathway:{}'
+}
+
 MODULE_NAME = 'pathme_viewer'
 PATHME_DIR = os.environ.get('PATHME_DIRECTORY', os.path.join(os.path.expanduser('~'), '.pathme'))
 DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)

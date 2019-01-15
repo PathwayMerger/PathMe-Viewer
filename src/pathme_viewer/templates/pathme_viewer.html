@@ -6,6 +6,7 @@
 
 {% block title %}PathMe{% endblock %}
 
+{% import "meta/macros.html" as compath %}
 
 {% include "dependencies/graph_css.html" %}
 
@@ -29,7 +30,7 @@
     {% include "dependencies/common.html" %}
     {% include "dependencies/graph_js.html" %}
 
-     <script type="text/javascript"
+    <script type="text/javascript"
             src="{{ url_for('static', filename='js/d3-force-reused/manyBodyReuse.js') }}"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/inspire-tree/inspire-tree-bundled.js') }}"></script>
@@ -302,10 +303,36 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <h2 class="text-center">
-                            Info and Controls
+                            Help
                         </h2>
                     </div>
                     <div class="modal-body text-left"><!-- /.Modal body -->
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th><b>Pathway</b></th>
+                                <th><b>Database</b></th>
+                                <th><b>Identifier</b></th>
+                                <th><b>Color</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for pathway_id, resource in pathways.items() %}
+                                <tr>
+                                    <td>{{ pathway_id_to_name[pathway_id] }}</td>
+                                    <td>{{ compath.stylize_plugin_name(DATABASE_STYLE_DICT, resource) }}</td>
+                                    <td>{{ pathway_id }}</td>
+                                    <td>
+                                        <div class="circle {{ pathway_id }}"></div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <hr>
+                        <h2 class="text-center">
+                            Viewer's Controls
+                        </h2>
                         <table class="table table-responsive">
                             <thead>
                             <tr>

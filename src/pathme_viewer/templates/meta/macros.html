@@ -1,0 +1,7 @@
+{% macro stylize_plugin_name(styled_names, resource) -%}
+    {% if resource in styled_names %}
+        {{ styled_names.get(resource) }}
+    {% else %}
+        {{ resource }}
+    {% endif %}
+{%- endmacro %}

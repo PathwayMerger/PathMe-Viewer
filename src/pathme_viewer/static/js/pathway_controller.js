@@ -102,21 +102,6 @@ function updateGroups(links, paths) {
 
 
 /**
- * Flatten object returning all its keys and values in array.
- * @param {string} object.
- * @returns {array}
- * @example
- * // returns ['foo','value']
- * flattenObject({foo:'value'})
- */
-function flattenObject(object) {
-    return Object.keys(object).reduce(function (r, k) {
-        return r.concat(k, object[k]);
-    }, [])
-}
-
-
-/**
  * Creates an object with all default parameters necessary
  * @param {InspireTree} tree
  * @returns {object} Object with pks, remove, append and selected nodes in the tree
@@ -1444,7 +1429,7 @@ function initD3Force(graph, tree) {
 
     // Color legend
     $.each(subgraphToColor, function (pathwayId, color) {
-        $('#' + pathwayId).css({"background": color});
+        $('.' + pathwayId).css({"background": color});
     });
 
     // add interaction to the groups
