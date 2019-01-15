@@ -178,7 +178,7 @@ def to_json_custom(graph, _id='id', source='source', target='target'):
             edge_set.add(entry_code)
 
         payload = {
-            'bel': graph.edge_to_bel(u, v, data=data)
+            'bel': graph.edge_to_bel(u, v, data)
         }
         payload.update(data)
 
@@ -202,8 +202,6 @@ def export_graph(graph, format=None):
     :param format: desire format
     :return: graph representation in different format
     """
-    print(graph.name)
-    print(graph.version)
     if format is None or format == 'json':
         data = to_json_custom(graph)
         return jsonify(data)
