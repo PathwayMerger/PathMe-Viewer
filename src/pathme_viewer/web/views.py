@@ -109,15 +109,24 @@ def home():
 @pathme.route('/pathme/about')
 def about():
     """Render About page. Only when is run independent from ComPath"""
+    example_kegg = current_app.pathme_manager.get_pathway_by_id('hsa00010', 'kegg')
+    example_reactome = current_app.pathme_manager.get_pathway_by_id('R-HSA-109581', 'reactome')
+    example_wp = current_app.pathme_manager.get_pathway_by_id('WP100', 'wikipathways')
     metadata = [
         ('Python Version', sys.version),
         ('Deployed', time_instantiated),
-        ('KEGG Version', current_app.pathme_manager.get_pathway_by_id('hsa00010', 'kegg').created),
-        ('Reactome Version', current_app.pathme_manager.get_pathway_by_id('R-HSA-109581', 'reactome').created),
-        ('WikiPathways Version', current_app.pathme_manager.get_pathway_by_id('WP100', 'wikipathways').created),
+        ('KEGG Version', example_kegg.created if example_kegg else ''),
+        ('Reactome Version', example_reactome.created if example_reactome else ''),
+        ('WikiPathways Version', example_wp.created if example_wp else ''),
     ]
 
-    return render_template('meta/pathme_about.html', metadata=metadata)
+    return render_template('meta/about.html', metadata=metadata)
+
+
+@pathme.route('/pathme/tutorial')
+def tutorial():
+    """Render the tutorial page"""
+    return render_template('meta/help.html')
 
 
 @pathme.route('/pathme/viewer')
