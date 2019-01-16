@@ -88,7 +88,7 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
 
     managers[entry] = ExternalManager
 
-__version__ = '0.0.7'
+__version__ = '0.0.8-dev'
 
 __title__ = 'pathme_viewer'
 __description__ = "A plugin for PathMe that allows to explore overlaps across pathway databases."
