@@ -26,6 +26,9 @@
             })
         });
 
+        // Attach href to algorithm node overlap link
+        $("#nodeOverlap").attr('href', window.location.href.replace('/pathme/viewer', '/pathway/overlap'));
+
     </script>
     {% include "dependencies/common.html" %}
     {% include "dependencies/graph_js.html" %}
@@ -696,6 +699,11 @@
                             </span>
                             </div>
                         </form>
+
+                        <p>Calculate node overlap across pathways and visualize it as a Venn Diagram</p>
+
+                        <a id="nodeOverlap" class="btn btn-primary text-center">Explore</a>
+
                     </div><!-- /.Modal body -->
                 </div><!-- /.Modal content -->
             </div><!-- /.Modal dialog -->
