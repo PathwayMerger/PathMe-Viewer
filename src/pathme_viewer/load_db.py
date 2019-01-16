@@ -85,6 +85,9 @@ def import_from_pathme(manager, folder, files, conversion_method, database, **kw
     for file_name in tqdm.tqdm(files, desc='Converting {} to BEL to populate PathMe database'.format(database)):
         file_path = os.path.join(folder, file_name)
 
+        if not file_name.endswith('.pickle'):
+            continue
+
         bel_pathway = conversion_method(file_path, **kwargs)
 
         pathway_dict = _prepare_pathway_model(os.path.splitext(file_name)[0], database, bel_pathway)
