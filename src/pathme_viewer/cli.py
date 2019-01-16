@@ -28,7 +28,7 @@ from pathme.wikipathways.utils import (
     unzip_file
 )
 from pybel import union
-from .constants import DEFAULT_CACHE_CONNECTION
+from .constants import DEFAULT_CACHE_CONNECTION, DATABASE_STYLE_DICT
 from .load_db import load_kegg, load_reactome, load_wikipathways
 from .manager import Manager
 from .models import Base
@@ -179,7 +179,7 @@ def summarize(connection):
         click.echo('Summary of the database')
         click.echo('-----------------------')
         for database, number_of_pathways in pathway_count:
-            click.echo('{}: {} pathways'.format(database, number_of_pathways))
+            click.echo('{}: {} pathways'.format(DATABASE_STYLE_DICT[database], number_of_pathways))
 
 
 @manage.command(help='Export pathways to tsv')

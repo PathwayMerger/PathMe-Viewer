@@ -224,9 +224,14 @@ def delete_pathways():
     )
 
 
-@pathme.route('/api/pathway/node/<bel_node>')
-def get_pathways_with_node(bel_node):
+@pathme.route('/pathway/node')
+def get_pathways_with_node():
     """Return all pathways having a given node"""
+
+    bel_nodes = request.args.getlist('node_selection[]')
+
+    if not bel_nodes:
+        abort(500, '"{}" is not a valid input for this input'.format(request.args))
 
     pathways = set()
 
@@ -237,7 +242,7 @@ def get_pathways_with_node(bel_node):
         # Check if node is in the pathway
         for node in graph:
 
-            if node.as_bel() != bel_node:
+            if node.as_bel() not in bel_nodes:
                 continue
 
             pathways.add((pathway.pathway_id, pathway.resource_name))
@@ -245,8 +250,7 @@ def get_pathways_with_node(bel_node):
     return jsonify([
         [pathway_id, resource]
         for pathway_id, resource in pathways
-    ]
-    )
+    ])
 
 
 @pathme.route('/api/pathway/paths')
@@ -478,3 +482,37 @@ def api_pathway_autocompletion_resource_specific():
 def api_pathways_in_database():
     """Return number of pathways in database."""
     return jsonify(current_app.pathme_manager.count_pathways())
+
+
+@pathme.route('/api/node/suggestion/')
+def get_node_suggestion():
+    """Suggests a node
+
+    ---
+    tags:
+        - node
+    parameters:
+      - name: q
+        in: query
+        description: The search term
+        required: true
+        type: string
+    """
+    q = request.args.get('q')
+
+    if not q:
+        return jsonify([])
+
+    nodes = {
+        node
+        for bel, node in current_app.nodes.items()
+        if q in bel
+    }
+
+    return jsonify([
+        {
+            "text": node.as_bel(),
+            "id": node.as_bel()
+        }
+        for node in nodes
+    ])

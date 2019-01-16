@@ -21,6 +21,38 @@ $(document).ready(function () {
             });
         }, minLength: 2
     });
+
+    // Autocompletion for nodes seeding
+    $("#node_selection").select2({
+        theme: "bootstrap",
+        minimumInputLength: 2,
+        multiple: true,
+        placeholder: 'Please type any node',
+        ajax: {
+            url: "/api/node/suggestion/",
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results: data.map(function (item) {
+                            return {
+                                id: item.id, // node_id
+                                text: item.text // bel
+                            };
+                        }
+                    )
+                };
+            }
+        }
+    });
+
 });
 
 /**

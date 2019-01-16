@@ -11,6 +11,10 @@
     {{ super() }}
     <link rel="stylesheet" type="text/css"
           href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+    <link rel="stylesheet" type="text/css"
+          href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css'/>
+    <link rel="stylesheet" type="text/css"
+          href='https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css'/>
 
     <style>
         /* Fuse dynamic field buttons */
@@ -40,7 +44,8 @@
     {% include "dependencies/common.html" %}
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/home_controller.js') }}"></script>
 {% endblock %}
 
@@ -105,13 +110,35 @@
                             </div>  <!-- /div.form-inline -->
                         </div> <!-- /div[data-role="dynamic-fields"] -->
                         <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
-                            <input class="btn btn-primary btn-lg" value="Explore" type="submit">
+                            <input class="btn btn-primary btn-lg" value="Explore Pathways" type="submit">
                         </div>
                     </form>
                 </div>
             </div>
-            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
         </div>
+        <form id="query-form" method="get" action="{{ url_for('pathme_viewer.get_pathways_with_node') }}">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Explore Pathways Containing a Given Set of Entities
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Choose BEL nodes (e.g., genes, chemicals, miRNAs etc.) and explore which set of pathways
+                        contain them.
+                    </p>
+                </div>
+                <div class="form-group form-horizontal" style="padding-bottom: 20px; margin-bottom: 20px;">
+                    <div class="col-md-10">
+                        <select style="width: 60%" multiple="multiple" name="node_selection[]"
+                                id="node_selection"></select>
+                    </div>
+                </div>
+
+                <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
+                    <input class="btn btn-primary btn-lg" value="Explore Pathways from Nodes" type="submit">
+                </div>
+            </div>
+        </form>
     </div>
     {% include "meta/footer.html" %}
 {% endblock %}
