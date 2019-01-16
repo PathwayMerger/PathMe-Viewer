@@ -130,6 +130,37 @@ def tutorial():
     return render_template('meta/help.html')
 
 
+@pathme.route('/pathway/node')
+def get_pathways_with_node():
+    """Return all pathways having a given node"""
+
+    bel_nodes = request.args.getlist('node_selection[]')
+
+    if not bel_nodes:
+        abort(500, '"{}" is not a valid input for this input'.format(request.args))
+
+    pathways = set()
+
+    for pathway in current_app.pathme_manager.get_all_pathways():
+        # Load networkX graph
+        graph = from_bytes(pathway.blob)
+
+        # Check if node is in the pathway
+        for node in graph:
+
+            if node.as_bel() not in bel_nodes:
+                continue
+
+            pathways.add(pathway)
+
+    return render_template(
+        'pathway_table.html',
+        pathways=pathways,
+        DATABASE_URL_DICT=DATABASE_URL_DICT,
+        DATABASE_STYLE_DICT=DATABASE_STYLE_DICT
+    )
+
+
 @pathme.route('/pathme/viewer')
 def viewer():
     """PathMe page."""
@@ -156,7 +187,7 @@ def viewer():
         pathways=pathways,
         pathway_id_to_name=pathway_id_to_name,
         pathways_name='+'.join(
-            '<a href="{}">{}</a><div class="circle {}"></div>'.format(
+            '<a href="{}" target="_blank"> {}</a><div class="circle {}"></div>'.format(
                 DATABASE_URL_DICT[pathway_to_resource[pathway_id]].format(pathway_id.strip('hsa')),
                 pathway_name,
                 pathway_id
@@ -222,35 +253,6 @@ def delete_pathways():
         status=200,
         message='All Pathways have been deleted',
     )
-
-
-@pathme.route('/pathway/node')
-def get_pathways_with_node():
-    """Return all pathways having a given node"""
-
-    bel_nodes = request.args.getlist('node_selection[]')
-
-    if not bel_nodes:
-        abort(500, '"{}" is not a valid input for this input'.format(request.args))
-
-    pathways = set()
-
-    for pathway in current_app.pathme_manager.get_all_pathways():
-        # Load networkX graph
-        graph = from_bytes(pathway.blob)
-
-        # Check if node is in the pathway
-        for node in graph:
-
-            if node.as_bel() not in bel_nodes:
-                continue
-
-            pathways.add((pathway.pathway_id, pathway.resource_name))
-
-    return jsonify([
-        [pathway_id, resource]
-        for pathway_id, resource in pathways
-    ])
 
 
 @pathme.route('/api/pathway/paths')

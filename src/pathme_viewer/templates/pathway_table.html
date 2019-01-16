@@ -45,9 +45,48 @@
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
 
-      <script>
+    <script>
         $(document).ready(function () {
-            $("#pathway-table").DataTable();
+            var table = $("#pathway-table").DataTable();
+
+            // Clicks all buttons tables
+            $('#selectAll').click(function (e) {
+
+                var boolean = $(this).prop('checked');
+
+                // For each table add a hidden input to the form with the checked boxes
+                $.each(table.$('input'), function (index, input) {
+                    input.checked = boolean;
+                });
+            });
+
+            // Preprocess form before submiting
+            var form = $('#query-form');
+            form.submit(function () {
+                // Modify inputs to follow same schema as main page
+                $.each(table.$('input'), function (index, input) {
+                    if (input.checked) {
+                        pathwayInfo = input.value.split("|");
+
+                        var newInput1 = $("<input>")
+                            .attr("type", "hidden")
+                            .attr("name", "pathways[]").val(pathwayInfo[0]);
+
+                        form.append(newInput1);
+
+                        var newInput2 = $("<input>")
+                            .attr("type", "hidden")
+                            .attr("name", "resources[]").val(pathwayInfo[1]);
+
+                        form.append(newInput2);
+                    }
+                    //Remove input
+                    input.remove()
+                });
+
+                // Submit form
+                return true;
+            });
         });
     </script>
 {% endblock %}
@@ -58,7 +97,7 @@
     <div class="container" style="margin-top: 50px">
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
-        <form id="query-form" method="get" action="{{ url_for('pathme_viewer.get_pathways_with_node') }}">
+        <form id="query-form" method="get" action="{{ url_for('pathme_viewer.viewer') }}">
 
             <div class="panel panel-default">
                 <div class="panel-heading">Select the Pathways to Explore
@@ -74,14 +113,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for network in networks %}
+                            {% for pathway in pathways %}
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="networks" name="network_ids[]"
-                                               value="{{ network.id }}"/>
+                                        <input type="checkbox" name="unused"
+                                               value="{{ pathway.pathway_id }}|{{ pathway.resource_name }}"/>
                                     </td>
-                                    <td>{{ network.name }}</td>
-                                    <td>{{ network.version }}</td>
+                                    <td>
+                                        <a href="{{ DATABASE_URL_DICT[pathway.resource_name].format(pathway.pathway_id.strip('hsa')) }}"
+                                           target="_blank">
+                                            {{ pathway.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ DATABASE_STYLE_DICT[pathway.resource_name] }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -90,7 +134,7 @@
                 </div>
 
                 <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
-                    <input class="btn btn-primary btn-lg" value="Explore Pathways from Nodes" type="submit">
+                    <input class="btn btn-primary btn-lg" value="Explore Pathways" type="submit">
                 </div>
             </div>
         </form>
