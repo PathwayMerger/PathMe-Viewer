@@ -7,7 +7,7 @@ from itertools import combinations
 
 from flask import abort, Response, jsonify, send_file
 from flask import current_app
-from pybel import to_bel_lines, to_graphml, to_bytes, to_csv, union
+from pybel import collapse_to_genes, to_bel_lines, to_graphml, to_bytes, to_csv, union
 from pybel.dsl import BaseAbundance
 from pybel.constants import *
 from pybel.io import from_bytes
@@ -325,6 +325,8 @@ def get_pathway_nodes(pathway):
     """
     # Loads the BELGraph
     graph = from_bytes(pathway.blob)
+
+    collapse_to_genes(graph)
 
     # Return BaseAbundace BEL nodes
     return {
