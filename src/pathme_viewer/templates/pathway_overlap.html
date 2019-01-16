@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Pathway Node Overlap{% endblock %}
+
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+
+    <style>
+
+        /* Fuse dynamic field buttons */
+
+        [data-role="dynamic-fields"] > .form-inline + .form-inline {
+            margin-top: 0.5em;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline [data-role="add"] {
+            display: none;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="add"] {
+            display: inline-block;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="remove"] {
+            display: none;
+        }
+
+        /* Gene Sets in table info */
+
+        td {
+            overflow: scroll;
+        }
+
+        /* VennDiagram CSS */
+
+        svg path {
+            stroke: white;
+            stroke-width: 1px;
+        }
+
+        #overlap-venn-diagram svg text {
+            fill: white;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        {#font-size: 12px !important;#}
+        }
+
+        .venntooltip {
+            position: absolute;
+            text-align: center;
+            width: 128px;
+            height: 25px;
+            background: #333;
+            color: #ddd;
+            padding: 2px;
+            border: 0px;
+            border-radius: 8px;
+            opacity: 0;
+        }
+
+
+    </style>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+    {% include "dependencies/common.html" %}
+    {% include "dependencies/venn.html" %}
+
+    <script type="text/javascript">
+        // Store venn diagram data as a variable
+        var vennData = {{ processed_venn_diagram|safe }};
+
+        /**
+         * Creates a new row in info table
+         * @param {object} table: table object
+         * @param {int} row: row number
+         * @param {string} column1: string for column1
+         * @param {string} column2: string for column2
+         */
+        function insertRow(table, row, column1, column2) {
+
+            var row = table.insertRow(row);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = column1;
+            cell2.innerHTML = column2;
+        }
+
+        /**
+         * Renders node info table
+         * @param {object} data object
+         */
+        function populateInfoTable(data) {
+
+            console.log(data)
+
+            var dynamicTable = document.getElementById('info-table');
+
+            while (dynamicTable.rows.length > 0) {
+                dynamicTable.deleteRow(0);
+            }
+            delete data.sets;
+
+            var tableObject = {};
+
+
+            if ("intersection" in data) {
+                tableObject["Pathway(s)"] = data["intersection"];
+            }
+
+            else {
+                tableObject["Pathway(s)"] = data["label"];
+            }
+
+            tableObject["Node Set Size"] = data["size"];
+
+
+            tableObject["Node Set"] = data["bel_nodes"].join(", ");
+
+            var row = 0;
+            $.each(tableObject, function (key, value) {
+                insertRow(dynamicTable, row, key, value);
+                row++
+            });
+
+        }
+
+        // Adapted from https://github.com/benfred/venn.js/
+
+        var Venndiv = d3.select("#overlap-venn-diagram");
+
+        Venndiv.attr("align", "center"); // Align center the diagram
+
+        var geneOverlap = venn.VennDiagram(); // Plot the Venn Diagram
+        Venndiv.datum(vennData).call(geneOverlap); // Stick data
+
+        // Add table creation
+        Venndiv.selectAll("g").on("dblclick", function (d, i) {
+            populateInfoTable(d);
+        })
+
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
+            <div class="panel-body">
+                <div id="overlap-venn-diagram"></div>
+            </div>
+            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
+        </div>
+    </div>
+    {% include "meta/footer.html" %}
+{% endblock %}

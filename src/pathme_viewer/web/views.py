@@ -36,7 +36,9 @@ from pathme_viewer.graph_utils import (
     get_annotations_from_request,
     get_tree_annotations,
     merge_pathways,
-    process_request
+    prepare_venn_diagram_data,
+    process_request,
+    process_overlap_for_venn_diagram
 )
 from pathme_viewer.models import Pathway
 
@@ -130,6 +132,17 @@ def tutorial():
     return render_template('meta/help.html')
 
 
+@pathme.route('/admin/delete/pathways')
+def delete_pathways():
+    """Delete all pathways."""
+    current_app.pathme_manager.delete_all_pathways()
+
+    return jsonify(
+        status=200,
+        message='All Pathways have been deleted',
+    )
+
+
 @pathme.route('/pathway/node')
 def get_pathways_with_node():
     """Return all pathways having a given node"""
@@ -157,6 +170,25 @@ def get_pathways_with_node():
         'pathway_table.html',
         pathways=pathways,
         DATABASE_URL_DICT=DATABASE_URL_DICT,
+        DATABASE_STYLE_DICT=DATABASE_STYLE_DICT
+    )
+
+
+@pathme.route('/pathway/overlap')
+def calculate_overlap():
+    """Return the overlap between different pathways in order to generate a Venn diagram."""
+    pathways = process_request(request)
+
+    if len(pathways) < 2:
+        return abort(500, 'Only one pathway has been submitted!')
+
+    pathway_data = prepare_venn_diagram_data(current_app.pathme_manager, pathways)
+
+    processed_venn_diagram = process_overlap_for_venn_diagram(pathway_data)
+
+    return render_template(
+        'pathway_overlap.html',
+        processed_venn_diagram=processed_venn_diagram,
         DATABASE_STYLE_DICT=DATABASE_STYLE_DICT
     )
 
@@ -242,17 +274,6 @@ def get_network_tree():
 
     # Return annotation in graph
     return jsonify(get_tree_annotations(graph))
-
-
-@pathme.route('/admin/delete/pathways')
-def delete_pathways():
-    """Delete all pathways."""
-    current_app.pathme_manager.delete_all_pathways()
-
-    return jsonify(
-        status=200,
-        message='All Pathways have been deleted',
-    )
 
 
 @pathme.route('/api/pathway/paths')

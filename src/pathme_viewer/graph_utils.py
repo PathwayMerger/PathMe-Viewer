@@ -3,11 +3,12 @@
 """This module contains the methods used to deal with BELGraphs."""
 
 from operator import methodcaller
+from itertools import combinations
 
 from flask import abort, Response, jsonify, send_file
 from flask import current_app
-from pybel import to_bel_lines, to_graphml, to_bytes, to_csv
-from pybel import union
+from pybel import to_bel_lines, to_graphml, to_bytes, to_csv, union
+from pybel.dsl import BaseAbundance
 from pybel.constants import *
 from pybel.io import from_bytes
 from pybel.struct import add_annotation_value
@@ -313,3 +314,104 @@ def get_contradiction_summary(graph):
         relations = {data[RELATION] for data in graph[u][v].values()}
         if relation_set_has_contradictions(relations):
             yield u, v, relations
+
+
+def get_pathway_nodes(pathway):
+    """Return single nodes in pathway.
+
+    :param pathme_viewer.models.Pathway pathway: pathway entry
+    :return: BaseAbundance nodes
+    :rtype: list[pybel.dsl.BaseAbundance]
+    """
+    # Loads the BELGraph
+    graph = from_bytes(pathway.blob)
+
+    # Return BaseAbundace BEL nodes
+    return {
+        node.as_bel()
+        for node in graph
+        if isinstance(node, BaseAbundance)
+    }
+
+
+def prepare_venn_diagram_data(manager, pathways):
+    """Prepare Venn Diagram data.
+
+    :param pathme_viewer.manager.Manager manager: Manager
+    :param dict[str,str] pathways: pathway id resource dict
+    :rtype: dict
+    """
+    pathway_data = {}
+    for pathway_id, resource in pathways.items():
+        # Get pathway from DB
+        pathway = manager.get_pathway_by_id(pathway_id, resource)
+
+        # Confirm that pathway exists
+        if not pathway:
+            abort(
+                500,
+                'Pathway "{}" in resource "{}" was not found in the database. '
+                'Please check that you have used correctly the autocompletion form.'.format(
+                    pathway_id, resource)
+            )
+        # Get pathway nodes
+        nodes = get_pathway_nodes(pathway)
+
+        pathway_data[pathway.name] = nodes
+
+    return pathway_data
+
+
+def process_overlap_for_venn_diagram(pathways_nodes, skip_gene_set_info=False):
+    """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/.
+
+    :param dict[str,set] pathways_nodes: pathway to bel nodes dictionary
+    :param bool skip_gene_set_info: include gene set overlap data
+    :return: list[dict]
+    """
+
+    # Creates future js array with gene sets' lengths
+    overlaps_venn_diagram = []
+
+    pathway_to_index = {}
+    index = 0
+
+    for name, bel_nodes in pathways_nodes.items():
+
+        # Only minimum info is returned
+        if skip_gene_set_info:
+            overlaps_venn_diagram.append(
+                {'sets': [index], 'size': len(bel_nodes), 'label': name.upper()}
+            )
+        # Returns gene set overlap/intersection information as well
+        else:
+            overlaps_venn_diagram.append(
+                {'sets': [index], 'size': len(bel_nodes), 'label': name, 'bel_nodes': list(bel_nodes)}
+            )
+
+        pathway_to_index[name] = index
+
+        index += 1
+
+    # Perform intersection calculations
+    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(pathways_nodes.items(), r=2):
+        # Only minimum info is returned
+        if skip_gene_set_info:
+            overlaps_venn_diagram.append(
+                {
+                    'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                    'size': len(set_1_values.intersection(set_2_values)),
+                }
+            )
+        # Returns gene set overlap/intersection information as well
+        else:
+            overlaps_venn_diagram.append(
+                {
+                    'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                    'size': len(set_1_values.intersection(set_2_values)),
+                    'bel_nodes': list(set_1_values.intersection(set_2_values)),
+                    'intersection': set_1_name + ' &#8745 ' + set_2_name
+                }
+            )
+
+    return overlaps_venn_diagram
