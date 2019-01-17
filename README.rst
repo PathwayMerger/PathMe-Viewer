@@ -26,13 +26,13 @@ choose a pathway, first select a database and the autocompletion form will then 
 interest to you. After pathways have been selected, click on the "Explore" button to render the merged network
 corresponding to the selected pathways.
 
-.. image:: https://github.com/PathwayMerger/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/main_page_screenshot.png
+.. image:: https://github.com/PathwayMerger/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/main_page_screenshot.jpg
     :width: 500px
 
 The resulting network is visualized in the next page where multiple functionalities enable the exploration of the
 pathway(s).
 
-.. image:: https://github.com/PathwayMerger/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/visualization_example.png
+.. image:: https://github.com/PathwayMerger/PathMe-Viewer/blob/master/src/pathme_viewer/static/img/visualization_example.jpg
     :width: 500px
 
 Installation |pypi_version| |python_versions| |pypi_license|
