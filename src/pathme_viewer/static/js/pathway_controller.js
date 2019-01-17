@@ -15,7 +15,7 @@ window.collapse2Genes = false;
 // Constants used in the graph controller
 var nominalBaseNodeSize = 10; // Default node radius
 var edgeStroke = 3.5;  // Edge width
-var minZoom = 0.1, maxZoom = 15; // Zoom variables
+var minZoom = 0.1, maxZoom = 20; // Zoom variables
 var opacity = 0.3; //opacity links
 
 //Convex Hull Constants
