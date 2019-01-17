@@ -126,7 +126,7 @@ def about():
     return render_template('meta/about.html', metadata=metadata)
 
 
-@pathme.route('/pathme/tutorial')
+@pathme.route('/tutorial')
 def tutorial():
     """Render the tutorial page"""
     return render_template('meta/help.html')
@@ -532,10 +532,13 @@ def get_node_suggestion():
         if q in bel
     }
 
-    return jsonify([
-        {
-            "text": node.as_bel(),
-            "id": node.as_bel()
-        }
-        for node in nodes
-    ])
+    matching_nodes = [{
+        "text": node.as_bel(),
+        "id": node.as_bel()
+    }
+        for node in nodes]
+
+    if not matching_nodes:
+        return jsonify([])
+
+    return jsonify(sorted(matching_nodes, key=lambda k: len(k["text"])))

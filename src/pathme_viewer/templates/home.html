@@ -35,7 +35,10 @@
             display: none;
         }
 
-
+        .box {
+            display: flex;
+            align-items: center;
+        }
     </style>
 {% endblock %}
 
@@ -56,9 +59,20 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <div class="jumbotron">
-            <h1>PathMe Viewer</h1>
-            <p>A web application to merge and explore the mechanistic pathway knowledge.
-            </p>
+            <div class="row">
+                <div class="box">
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                        <img src="{{ url_for('static', filename='img/logo/pathme-logo-100px.png') }}"/>
+                    </div>
+                    <div class="col-lg-10 col-md-10 col-sm-10">
+                        <h1>PathMe Viewer</h1>
+                        <p>A web application to merge and explore the mechanistic pathway knowledge. See our <a
+                                href="{{ url_for('pathme_viewer.tutorial') }}">tutorial on how to get started.</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="panel panel-default">
@@ -119,13 +133,23 @@
         <form id="query-form" method="get" action="{{ url_for('pathme_viewer.get_pathways_with_node') }}">
 
             <div class="panel panel-default">
-                <div class="panel-heading">Explore Pathways Containing a Given Set of Entities
+                <div class="panel-heading">Explore Pathways Containing a Given Set of Nodes
                 </div>
                 <div class="panel-body">
                     <p>
-                        Choose BEL nodes (e.g., genes, chemicals, miRNAs etc.) and explore which set of pathways
+                        Below, you can select BEL nodes (e.g., genes, compounds, miRNAs, etc.) and explore which set of
+                        pathways
                         contain them.
                     </p>
+                    <p>
+                           <span>Examples:
+                            <a class="nounderline"
+                               href="/pathway/node?node_selection[]=g(HGNC%3AMTOR)&node_selection[]=p(HGNC%3AMTOR)">MTOR (gene and protein)</a>,
+                <a class="nounderline"
+                   href="/pathway/node?node_selection[]=p(HGNC%3AMAPK1)&node_selection[]=g(HGNC%3AMAPK1)">MAPK1 (gene and protein)</a>
+                    </span>
+                    </p>
+
                 </div>
                 <div class="form-group form-horizontal" style="padding-bottom: 20px; margin-bottom: 20px;">
                     <div class="col-md-10">
@@ -135,7 +159,7 @@
                 </div>
 
                 <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
-                    <input class="btn btn-primary btn-lg" value="Explore Pathways from Nodes" type="submit">
+                    <input class="btn btn-primary btn-lg" value="Explore Pathways" type="submit">
                 </div>
             </div>
         </form>
