@@ -87,15 +87,3 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
         log.warning('%s:%s is not a standard ComPath manager class', entry, ExternalManager)
 
     managers[entry] = ExternalManager
-
-__version__ = '0.0.8-dev'
-
-__title__ = 'pathme_viewer'
-__description__ = "A plugin for PathMe that allows to explore overlaps across pathway databases."
-__url__ = 'https://github.com/ComPath/PathMe-Viewer'
-
-__author__ = 'Daniel Domingo-Fernandez'
-__email__ = 'daniel.domingo.fernandez@scai.fraunhofer.de'
-
-__license__ = 'MIT License'
-__copyright__ = 'Copyright (c) 2017-2018 Daniel Domingo-Fernandez'
