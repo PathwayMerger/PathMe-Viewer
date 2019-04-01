@@ -108,6 +108,10 @@ def home():
     """PathMe home page."""
     return render_template('home.html')
 
+@pathme.route('/imprint')
+def imprint():
+    """Render the Imprint page."""
+    return render_template('meta/imprint.html')
 
 @pathme.route('/pathme/about')
 def about():
