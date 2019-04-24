@@ -116,7 +116,7 @@ please modify dockerfile (line 55) and src/bin/bootstrap.sh (line 23).
     :target: https://codecov.io/gh/pathwaymerger/PathMe-Viewer?branch=master
     :alt: Coverage Status
 
-.. |docs| image:: http://readthedocs.org/projects/pathme_viewer/badge/?version=latest
+.. |docs| image:: https://readthedocs.org/projects/pathme-viewer/badge/?version=latest
     :target: https://pathme_viewer.readthedocs.io/en/latest/
     :alt: Documentation Status
 
