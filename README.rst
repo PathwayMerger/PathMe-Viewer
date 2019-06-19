@@ -17,7 +17,7 @@ Citation
 If you use PathMe in your work, please cite [1]_:
 
 .. [1] Domingo-Fernández, D., *et al.* (2018). `PathMe: Merging and exploring mechanistic pathway knowledge
-    <https://doi.org/10.1101/451625>`_. bioRxiv *451625*.
+    <https://doi.org/10.1186/s12859-019-2863-9>`_. *BMC Bioinformatics*, 20:243.
 
 How to Use
 ----------
