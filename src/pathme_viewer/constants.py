@@ -4,8 +4,7 @@
 
 import os
 
-from pathme.cli import WIKIPATHWAYS_FILES
-from pathme.constants import get_connection, KEGG, REACTOME, WIKIPATHWAYS
+from pathme.constants import get_connection, KEGG, REACTOME, WIKIPATHWAYS, WIKIPATHWAYS_FILES
 
 DATABASE_STYLE_DICT = {
     KEGG: 'KEGG',
