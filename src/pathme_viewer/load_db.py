@@ -4,8 +4,10 @@
 
 import logging
 import os
+from typing import List
 
 import tqdm
+from pybel import from_pickle, to_bytes
 
 from pathme.constants import (
     KEGG, KEGG_BEL, REACTOME, REACTOME_BEL, RDF_REACTOME, WIKIPATHWAYS, WIKIPATHWAYS_BEL, KEGG_FILES, REACTOME_FILES,
@@ -14,13 +16,24 @@ from pathme.kegg.convert_to_bel import kegg_to_bel
 from pathme.kegg.utils import download_kgml_files, get_kegg_pathway_ids
 from pathme.reactome.rdf_sparql import reactome_to_bel
 from pathme.reactome.utils import untar_file
-from pathme.utils import make_downloader, get_files_in_folder
+from pathme.utils import make_downloader
 from pathme.wikipathways.rdf_sparql import wikipathways_to_bel
-from pathme.wikipathways.utils import get_file_name_from_url, get_wikipathways_files
-from pybel import from_pickle, to_bytes
+from pathme.wikipathways.utils import get_file_name_from_url, iterate_wikipathways_paths
 from .constants import HUMAN_WIKIPATHWAYS
 
 log = logging.getLogger(__name__)
+
+
+def get_files_in_folder(path: str) -> List[str]:
+    """Return the files in a given folder.
+    :param path: folder path
+    :return: file names in folder
+    """
+    return [
+        file
+        for file in os.listdir(path)
+        if os.path.isfile(os.path.join(path, file))
+    ]
 
 
 def _prepare_pathway_model(pathway_id, database, bel_graph):
@@ -199,7 +212,7 @@ def load_wikipathways(manager, hgnc_manager, folder=None, connection=None, only_
         # 2. Check if RDF files are downloaded, if not download them
         wikipathways_data_folder = folder or HUMAN_WIKIPATHWAYS
 
-        files = get_wikipathways_files(
+        files = iterate_wikipathways_paths(
             wikipathways_data_folder,
             connection,
             only_canonical
