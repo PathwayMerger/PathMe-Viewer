@@ -7,8 +7,9 @@ import os
 
 import tqdm
 
-from pathme.cli import KEGG_FILES, REACTOME_FILES
-from pathme.constants import KEGG, KEGG_BEL, REACTOME, REACTOME_BEL, RDF_REACTOME, WIKIPATHWAYS, WIKIPATHWAYS_BEL
+from pathme.constants import (
+    KEGG, KEGG_BEL, REACTOME, REACTOME_BEL, RDF_REACTOME, WIKIPATHWAYS, WIKIPATHWAYS_BEL, KEGG_FILES, REACTOME_FILES,
+)
 from pathme.kegg.convert_to_bel import kegg_to_bel
 from pathme.kegg.utils import download_kgml_files, get_kegg_pathway_ids
 from pathme.reactome.rdf_sparql import reactome_to_bel
