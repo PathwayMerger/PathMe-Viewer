@@ -13,9 +13,9 @@ from pathme.kegg.convert_to_bel import kegg_to_bel
 from pathme.kegg.utils import download_kgml_files, get_kegg_pathway_ids
 from pathme.reactome.rdf_sparql import reactome_to_bel
 from pathme.reactome.utils import untar_file
-from pathme.utils import make_downloader, get_files_in_folder
+from pathme.utils import make_downloader, get_paths_in_folder
 from pathme.wikipathways.rdf_sparql import wikipathways_to_bel
-from pathme.wikipathways.utils import get_file_name_from_url, get_wikipathways_files
+from pathme.wikipathways.utils import get_file_name_from_url, iterate_wikipathways_paths
 from pybel import from_pickle, to_bytes
 from .constants import HUMAN_WIKIPATHWAYS
 
@@ -104,7 +104,7 @@ def load_kegg(manager, hgnc_manager, chebi_manager, folder=None, flatten=None):
     :param Optional[bool] flatten: flatten or not
     """
     # 1. Check if there are pickles in the KEGG folder. If there are already pickles, use them to populate db
-    pickles = get_files_in_folder(KEGG_BEL)
+    pickles = get_paths_in_folder(KEGG_BEL)
 
     if pickles:
         log.info('You seem to already have created BEL Graphs using PathMe. The database will be populated using those')
@@ -114,7 +114,7 @@ def load_kegg(manager, hgnc_manager, chebi_manager, folder=None, flatten=None):
         # 2. Check that KGML files are already downloaded
         kegg_data_folder = folder or KEGG_FILES
 
-        kgml_files = get_files_in_folder(kegg_data_folder)
+        kgml_files = get_paths_in_folder(kegg_data_folder)
 
         # Skip not KGML files
         kgml_files = [
@@ -151,7 +151,7 @@ def load_reactome(manager, hgnc_manager, folder=None):
     :param Optional[str] folder: folder
     """
     # 1. Check if there are pickles in the Reactome folder. If there are already pickles, use them to populate db
-    pickles = get_files_in_folder(REACTOME_BEL)
+    pickles = get_paths_in_folder(REACTOME_BEL)
 
     if pickles:
         log.info('You seem to already have created BEL Graphs using PathMe. The database will be populated using those')
@@ -185,7 +185,7 @@ def load_wikipathways(manager, hgnc_manager, folder=None, connection=None, only_
     :param Optional[bool] only_canonical: only identifiers present in WP bio2bel db
     """
     # 1. Check if there are pickles in the WikiPathways folder. If there are already pickles, use them to populate db
-    pickles = get_files_in_folder(WIKIPATHWAYS_BEL)
+    pickles = get_paths_in_folder(WIKIPATHWAYS_BEL)
 
     if pickles:
         log.info('You seem to already have created BEL Graphs using PathMe. The database will be populated using those')
@@ -195,7 +195,7 @@ def load_wikipathways(manager, hgnc_manager, folder=None, connection=None, only_
         # 2. Check if RDF files are downloaded, if not download them
         wikipathways_data_folder = folder or HUMAN_WIKIPATHWAYS
 
-        files = get_wikipathways_files(
+        files = iterate_wikipathways_paths(
             wikipathways_data_folder,
             connection,
             only_canonical
