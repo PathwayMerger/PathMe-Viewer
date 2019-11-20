@@ -33,15 +33,15 @@ RUN chown -R pathme /data && chgrp -R pathme /data
 # TODO: When zipping files in macOS: https://apple.stackexchange.com/questions/239578/compress-without-ds-store-and-macosx
 
 # Download KEGG pickles (Update link if the file is replaced)
-ADD https://drive.google.com/uc?authuser=0&id=1a_6lck28Df9v2E-Dt45-ZARsdGVs-V9s&export=download /home/pathme/.pathme/kegg/bel/bel.zip
+ADD https://owncloud.scai.fraunhofer.de/index.php/s/ifyfNGaA8CSnTcb/download /home/pathme/.pathme/kegg/bel/bel.zip
 RUN 7z x /home/pathme/.pathme/kegg/bel/bel.zip -o/home/pathme/.pathme/kegg/bel/
 
 # Download Reactome pickles (Update link if the file is replaced)
-ADD https://owncloud.scai.fraunhofer.de/index.php/s/EKkJmrXnGr2rwd6/download /home/pathme/.pathme/reactome/bel/bel.zip
+ADD https://owncloud.scai.fraunhofer.de/index.php/s/RkHLkPNyEDAijdt/download /home/pathme/.pathme/reactome/bel/bel.zip
 RUN 7z x /home/pathme/.pathme/reactome/bel/bel.zip -o/home/pathme/.pathme/reactome/bel/
 
 # Download WikiPathways pickles (Update link if the file is replaced)
-ADD https://drive.google.com/uc?authuser=0&id=1adwTE9cUpMb0lFiN0gbrGLaWfExtFdux&export=download /home/pathme/.pathme/wikipathways/bel/bel.zip
+ADD https://owncloud.scai.fraunhofer.de/index.php/s/38QpfW6ykCWdeBr/download /home/pathme/.pathme/wikipathways/bel/bel.zip
 RUN 7z x /home/pathme/.pathme/wikipathways/bel/bel.zip -o/home/pathme/.pathme/wikipathways/bel/
 
 # Remove downloaded files
