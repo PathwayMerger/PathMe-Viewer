@@ -33,19 +33,19 @@ RUN chown -R pathme /data && chgrp -R pathme /data
 # TODO: When zipping files in macOS: https://apple.stackexchange.com/questions/239578/compress-without-ds-store-and-macosx
 
 # Download KEGG pickles (Update link if the file is replaced)
-ADD https://drive.google.com/uc?authuser=0&id=1a_6lck28Df9v2E-Dt45-ZARsdGVs-V9s&export=download /home/pathme/.pathme/kegg/bel/bel.zip
-RUN 7z x /home/pathme/.pathme/kegg/bel/bel.zip -o/home/pathme/.pathme/kegg/bel/
+ADD https://drive.google.com/uc?authuser=0&id=1a_6lck28Df9v2E-Dt45-ZARsdGVs-V9s&export=download /home/pathme/.pathme/kegg/bel.zip
+RUN 7z x /home/pathme/.pathme/kegg/bel.zip -o/home/pathme/.pathme/kegg/
 
 # Download Reactome pickles (Update link if the file is replaced)
-ADD https://owncloud.scai.fraunhofer.de/index.php/s/EKkJmrXnGr2rwd6/download /home/pathme/.pathme/reactome/bel/bel.zip
-RUN 7z x /home/pathme/.pathme/reactome/bel/bel.zip -o/home/pathme/.pathme/reactome/bel/
+ADD https://owncloud.scai.fraunhofer.de/index.php/s/EKkJmrXnGr2rwd6/download /home/pathme/.pathme/reactome/bel.zip
+RUN 7z x /home/pathme/.pathme/reactome/bel.zip -o/home/pathme/.pathme/reactome
 
 # Download WikiPathways pickles (Update link if the file is replaced)
-ADD https://drive.google.com/uc?authuser=0&id=1adwTE9cUpMb0lFiN0gbrGLaWfExtFdux&export=download /home/pathme/.pathme/wikipathways/bel/bel.zip
-RUN 7z x /home/pathme/.pathme/wikipathways/bel/bel.zip -o/home/pathme/.pathme/wikipathways/bel/
+ADD https://drive.google.com/uc?authuser=0&id=1adwTE9cUpMb0lFiN0gbrGLaWfExtFdux&export=download /home/pathme/.pathme/wikipathways/bel.zip
+RUN 7z x /home/pathme/.pathme/wikipathways/bel.zip -o/home/pathme/.pathme/wikipathways/
 
 # Remove downloaded files
-RUN rm /home/pathme/.pathme/kegg/bel/bel.zip && rm /home/pathme/.pathme/reactome/bel/bel.zip && rm /home/pathme/.pathme/wikipathways/bel/bel.zip
+RUN rm /home/pathme/.pathme/kegg/bel.zip && rm /home/pathme/.pathme/reactome/bel.zip && rm /home/pathme/.pathme/wikipathways/bel.zip
 
 # Install PathMe-Viewer module
 RUN pip3 install .
@@ -53,7 +53,7 @@ RUN pip3 install .
 # Add --user python modules to PATH
 ENV PATH="/home/pathme_viewer/.local/bin:$PATH"
 
-# TODO: Change me in order to export a port
+# TODO: Change me in order to export to a different port
 EXPOSE 5000
 
 USER pathme

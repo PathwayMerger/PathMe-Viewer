@@ -21,7 +21,7 @@ from pkg_resources import resource_filename
 from pybel import from_bytes
 from pybel.struct import get_random_path
 from pybel.struct.mutation.collapse import collapse_to_genes
-from pybel_tools.selection import get_subgraph_by_annotations
+from pybel.struct.mutation.induction import get_subgraph_by_annotations
 
 from pathme_viewer.constants import (
     COLLAPSE_TO_GENES,

@@ -92,7 +92,7 @@ To quickly deploy the web application locally, you can also use Docker. This can
 commands after installing Docker.
 
 1. Build a container named 'pathme' version 0.0.1 (you must be in the root directory after cloning this package with
-   Git).
+   git).
 
 .. code-block:: sh
 
@@ -104,7 +104,7 @@ commands after installing Docker.
 
     docker run --name=pathme -d -p 5000:5000 --restart=always -d pathme:0.0.1
 
-Note: the docker file is meant to be run on http://127.0.0.1:5000/. If you want to change the host/port
+Note: the docker file will run on http://127.0.0.1:5000/. If you want to change the host/port
 please modify dockerfile (line 55) and src/bin/bootstrap.sh (line 23).
 
 
