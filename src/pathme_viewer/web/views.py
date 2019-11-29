@@ -108,10 +108,12 @@ def home():
     """PathMe home page."""
     return render_template('home.html')
 
+
 @pathme.route('/imprint')
 def imprint():
     """Render the Imprint page."""
     return render_template('meta/imprint.html')
+
 
 @pathme.route('/pathme/about')
 def about():
@@ -533,14 +535,15 @@ def get_node_suggestion():
     nodes = {
         node
         for bel, node in current_app.nodes.items()
-        if q in bel
+        if q.lower() in bel.lower()
     }
 
     matching_nodes = [{
         "text": node.as_bel(),
         "id": node.as_bel()
     }
-        for node in nodes]
+        for node in nodes
+    ]
 
     if not matching_nodes:
         return jsonify([])
