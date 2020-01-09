@@ -3,23 +3,61 @@
 """This module contains the methods used to deal with BELGraphs."""
 
 import logging
-from itertools import combinations
 from operator import methodcaller
 
+import networkx as nx
 from flask import abort, Response, jsonify, send_file
 from flask import current_app
-from pybel import collapse_to_genes, to_bel_lines, to_graphml, to_bytes, to_csv, union
+from itertools import combinations
+from pybel import collapse_to_genes, to_bel_lines, to_bytes, to_csv, union
+from pybel.canonicalize import edge_to_bel
 from pybel.constants import *
 from pybel.dsl import BaseAbundance
 from pybel.io import from_bytes
 from pybel.struct import add_annotation_value
 from pybel.struct.summary import get_annotation_values_by_annotation
+from pybel_tools.summary.contradictions import relation_set_has_contradictions
 from six import BytesIO, StringIO
 
 from pathme_viewer.constants import BLACK_LIST, PATHWAYS_ARGUMENT, RESOURCES_ARGUMENT
-from pybel_tools.summary.contradictions import relation_set_has_contradictions
 
 log = logging.getLogger(__name__)
+
+
+def _to_graphml_umbrella(graph):
+    """Convert a BEL graph to GraphML XML file by previously canonicalizing the nodes.
+
+    :param graph: A BEL graph
+    """
+    rv = nx.MultiDiGraph()
+
+    for u, v, key, edge_data in graph.edges(data=True, keys=True):
+        bel_string = edge_to_bel(u, v, edge_data).split(' ')
+
+        rv.add_edge(
+            bel_string[0],
+            bel_string[2],
+            key=key,
+            relation=edge_data[RELATION],
+            bel=graph.edge_to_bel(u, v, edge_data),
+        )
+
+    return rv
+
+
+def to_graphml(graph, path):
+    """Write a graph to a GraphML XML file using :func:`networkx.write_graphml`.
+
+    :param graph: BEL Graph
+    :param path: Path to the new exported file
+
+    The .graphml file extension is suggested so Cytoscape can recognize it.
+    By default, this function exports using the PyBEL schema of including modifier information into the edges.
+    As an alternative, this function can also distinguish between
+    """
+    rv = _to_graphml_umbrella(graph)
+
+    nx.write_graphml(rv, path)
 
 
 def throw_parameter_error(parameter):
